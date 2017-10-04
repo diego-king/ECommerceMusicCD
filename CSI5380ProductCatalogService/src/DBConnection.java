@@ -2,7 +2,8 @@
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import DAO.*;
+
+import entity.*;
 
 public class DBConnection {
    // JDBC driver name and database URL
