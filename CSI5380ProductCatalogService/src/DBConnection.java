@@ -36,7 +36,8 @@ public class DBConnection {
 			   String title = rs.getString("title");
 			   Integer price = rs.getInt("price");
 			   String category = rs.getString("category");
-			   CD tmp = new CD(id, title, price, category);
+			   String imgURL = rs.getString("img_url");
+			   CD tmp = new CD(id, title, price, category, imgURL);
 			   tmpList.add(tmp);
 		   }
 		   rs.close();

@@ -5,12 +5,14 @@ public class CD {
 	private String title;
 	private Integer price;
 	private String category;
+	private String img_url;
 	
-	public CD(String id, String title, Integer price, String category) {
+	public CD(String id, String title, Integer price, String category, String img_url) {
 		this.id = id;
 		this.title = title;
 		this.price = price;
 		this.category = category;
+		this.img_url = img_url;
 	}
 	
 	public String getId() {
@@ -34,6 +36,14 @@ public class CD {
 	}
 	public String getCategory() {
 		return this.category;
+	}
+
+	public String getImgUrl() {
+		return img_url;
+	}
+
+	public void setImgUrl(String img_url) {
+		this.img_url = img_url;
 	}
 	
 }
