@@ -1,3 +1,4 @@
+package db;
 //STEP 1. Import required packages
 import java.sql.*;
 import java.util.ArrayList;
@@ -5,7 +6,7 @@ import java.util.List;
 
 import entity.*;
 
-public class DBConnection {
+public class DBConnectionPool {
    // JDBC driver name and database URL
    private static final String DB_URL = "jdbc:mysql://localhost:3306/database1";
 
