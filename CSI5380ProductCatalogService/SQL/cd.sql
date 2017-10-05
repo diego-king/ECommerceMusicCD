@@ -11,6 +11,7 @@ CREATE TABLE CD (
  title     VARCHAR(60) NOT NULL,
  price     INT UNSIGNED NOT NULL,
  category  ENUM('COUNTRY','POP','ROCK') NOT NULL,
+ img_url   VARCHAR(255) NOT NULL,
  PRIMARY KEY(cdid)
 ) ;
 
