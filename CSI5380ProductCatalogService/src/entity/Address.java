@@ -1,12 +1,12 @@
 package entity;
 
 public class Address {
-	final private int id;
-	final private String street;
-	final private String province;
-	final private String country;
-	final private String zip;
-	final private String phone;
+	private final int id;
+	private final String street;
+	private final String province;
+	private final String country;
+	private final String zip;
+	private final String phone;
 	
 	public Address(int id, String street, String province, String country, String zip, String phone) {
 		this.id = id;

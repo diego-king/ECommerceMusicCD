@@ -40,11 +40,19 @@
 
 package rest;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+
+import org.kopitubruk.util.json.JSONUtil;
+import org.kopitubruk.util.json.JsonObject;
+
+import entity.CD;
 
 @Path("product")
 public class ProdCatServices {
@@ -67,13 +75,25 @@ public class ProdCatServices {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("getProdList/{category}")
     public String getProductList (@PathParam("{category}") String category) {
+    	
     	if ("".equals(category)) {
     		
     	} else {
     		
     	}
     	
-		return category;
+    	Map<String,JsonObject> prodList = new HashMap<String, JsonObject>();
+    	JsonObject cd_json = new JsonObject();
+    	cd_json.add("id", "cd001");
+    	cd_json.add("title","abc");
+    	cd_json.add("price", 1);
+    	cd_json.add("category", "COUNTRY");
+    	cd_json.add("img_url", "www.google.com");
+    	
+    	//Testing
+    	prodList.put("cd001", cd_json);
+    	String returnStr = JSONUtil.toJSON(prodList);
+		return returnStr;
     } 
     
     @GET

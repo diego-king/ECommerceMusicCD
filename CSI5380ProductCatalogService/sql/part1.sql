@@ -1,3 +1,8 @@
+
+DROP DATABASE IF EXISTS database1;
+CREATE DATABASE database1;
+USE database1;
+
 /** cdid:     unique identifier of CD (like ISBN for books)
 * title:    title of CD
 * price:    unit price WHEN ordered
@@ -19,15 +24,15 @@ CREATE TABLE CD (
 # Dumping data for table 'CD'
 #
 
-INSERT INTO CD (cdid, title, price, category, img_url) VALUES ('cd001', 'Johnny Cash Greatest Hits', 1599, 'COUNTRY', '');
-INSERT INTO CD (cdid, title, price, category, img_url) VALUES ('cd002','Willy Nelson Greatest', 1599, 'COUNTRY', '');
-INSERT INTO CD (cdid, title, price, category, img_url) VALUES ('cd003','Patsy Cline Im So Lonely' ,1599,'COUNTRY', '');
-INSERT INTO CD (cdid, title, price, category, img_url) VALUES ('cd004', 'Tragically Hip Fully Completely', 2000, 'ROCK', '');
-INSERT INTO CD (cdid, title, price, category, img_url) VALUES ('cd005', 'Beatles White Album', 2000, 'ROCK', '');
-INSERT INTO CD (cdid, title, price, category, img_url) VALUES ('cd006', 'Rolling Stones Forty Licks', 2000, 'ROCK', '');
-INSERT INTO CD (cdid, title, price, category, img_url) VALUES ('cd007', 'Madonna Greatest Hits', 1799, 'POP');
-INSERT INTO CD (cdid, title, price, category, img_url) VALUES ('cd008', 'Alannis Morissette Jagged Little Pill', 1799, 'POP', '');
-INSERT INTO CD (cdid, title, price, category, img_url) VALUES ('cd009', 'Video Killed the Radio Star', 1799, 'POP', '');
+INSERT INTO CD (cdid, title, price, category, img_url) VALUES ('cd001', 'Johnny Cash Greatest Hits', 1599, 'COUNTRY', 'www.google.com');
+INSERT INTO CD (cdid, title, price, category, img_url) VALUES ('cd002','Willy Nelson Greatest', 1599, 'COUNTRY', 'www.google.com');
+INSERT INTO CD (cdid, title, price, category, img_url) VALUES ('cd003','Patsy Cline Im So Lonely' ,1599,'COUNTRY', 'www.google.com');
+INSERT INTO CD (cdid, title, price, category, img_url) VALUES ('cd004', 'Tragically Hip Fully Completely', 2000, 'ROCK', 'www.google.com');
+INSERT INTO CD (cdid, title, price, category, img_url) VALUES ('cd005', 'Beatles White Album', 2000, 'ROCK', 'www.google.com');
+INSERT INTO CD (cdid, title, price, category, img_url) VALUES ('cd006', 'Rolling Stones Forty Licks', 2000, 'ROCK', 'www.google.com');
+INSERT INTO CD (cdid, title, price, category, img_url) VALUES ('cd007', 'Madonna Greatest Hits', 1799, 'POP', 'www.google.com');
+INSERT INTO CD (cdid, title, price, category, img_url) VALUES ('cd008', 'Alannis Morissette Jagged Little Pill', 1799, 'POP', 'www.google.com');
+INSERT INTO CD (cdid, title, price, category, img_url) VALUES ('cd009', 'Video Killed the Radio Star', 1799, 'POP', 'www.google.com');
 #
 #
 
