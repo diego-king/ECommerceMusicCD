@@ -3,16 +3,31 @@ package db;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-
 import entity.*;
 
 public class DBConnectionPool {
    // JDBC driver name and database URL
-   private static final String DB_URL = "jdbc:mysql://localhost:3306/database1";
+   private final String DB_URL;
 
    //  Database credentials
-   private static final String USER = "root";
-   private static final String PASS = "password";
+   private final String USER;
+   private final String PASS ;
+   private final Integer maxConn;
+   
+   private static DBConnectionPool instance;
+   
+   private DBConnectionPool() {
+	   this.DB_URL = "jdbc:mysql://localhost:3306/database1";
+	   this.USER = "root";
+	   this.PASS = "password";
+	   this.maxConn = 20;
+   }
+   
+   public static DBConnectionPool getInstance() {
+	   if (instance == null)
+		   instance = new DBConnectionPool();
+	   return instance;
+   }
    
    public List<CD> getAllCDs() {
 	   Connection conn = null;

@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd" id="WebApp_ID" version="3.1">
-  <display-name>CSI5380Part1</display-name>
+  <display-name>Product Catalog Service</display-name>
   <servlet>
-    <description>Part0Servlet</description>
-    <display-name>Part0Servlet</display-name>
-    <servlet-name>Part0Servlet</servlet-name>
-    <servlet-class>Part0Servlet</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>Part0Servlet</servlet-name>
-    <url-pattern></url-pattern>
-  </servlet-mapping>
+  	<servlet-name>ProductCatService</servlet-name>
+    <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
+    	<init-param>
+            <param-name>javax.ws.rs.Application</param-name>
+            <param-value>rest.ProdServiceApp</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ProductCatService</servlet-name>
+        <url-pattern>/*</url-pattern>
+    </servlet-mapping>
 </web-app>

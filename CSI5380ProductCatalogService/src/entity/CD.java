@@ -1,11 +1,11 @@
 package entity;
 
 public class CD {
-	private String id;
-	private String title;
-	private Integer price;
-	private String category;
-	private String img_url;
+	private final String id;
+	private final String title;
+	private final Integer price;
+	private final String category;
+	private final String img_url;
 	
 	public CD(String id, String title, Integer price, String category, String img_url) {
 		this.id = id;
@@ -19,16 +19,8 @@ public class CD {
 		return this.id;
 	}
 	
-	public void setId(String id) {
-		this.id = id;
-	}
-	
 	public String getTitle() {
 		return this.title;
-	}
-	
-	public void setTitle(String title) {
-		this.title = title;
 	}
 	
 	public Integer getPrice() {
@@ -41,9 +33,4 @@ public class CD {
 	public String getImgUrl() {
 		return img_url;
 	}
-
-	public void setImgUrl(String img_url) {
-		this.img_url = img_url;
-	}
-	
 }
