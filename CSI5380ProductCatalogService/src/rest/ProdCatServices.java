@@ -40,68 +40,46 @@
 
 package rest;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-
-import org.kopitubruk.util.json.JSONUtil;
-import org.kopitubruk.util.json.JsonObject;
-
+import db.DBAgent;
 import entity.CD;
 
 @Path("product")
 public class ProdCatServices {
 
     @GET
-    @Produces("text/plain")
-    @Path("helloworld")
-    public String getHello() {
-        return "Hello World!";
-    }
-
-    @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("getCatList")
-    public String getCategoryList() {
+    public List<String> getCategoryList() {
+    	//DBAgent db = DBAgent.getInstance();
+    	//List<String> catList = db.getAllCatList();
 		return null;
     }
     
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("getProdList/{category}")
-    public String getProductList (@PathParam("{category}") String category) {
-    	
+    public List<CD> getProductList (@PathParam("{category}") String category) {
     	if ("".equals(category)) {
     		
     	} else {
     		
     	}
     	
-    	Map<String,JsonObject> prodList = new HashMap<String, JsonObject>();
-    	JsonObject cd_json = new JsonObject();
-    	cd_json.add("id", "cd001");
-    	cd_json.add("title","abc");
-    	cd_json.add("price", 1);
-    	cd_json.add("category", "COUNTRY");
-    	cd_json.add("img_url", "www.google.com");
-    	
-    	//Testing
-    	prodList.put("cd001", cd_json);
-    	String returnStr = JSONUtil.toJSON(prodList);
-		return returnStr;
+		return null;
     } 
     
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("getProdInfo/{productId}")
-    public String getProductInfo(@PathParam("{category}")String productId) {
-		return productId;
-    	
+    public CD getProductInfo(@PathParam("{productId}")String productId) {
+		return null;
     }
 
 }

@@ -10,7 +10,6 @@ public class ProdServiceApp extends Application {
     @Override
     public Set<Class<?>> getClasses() {
         final Set<Class<?>> classes = new HashSet<Class<?>>();
-        // register root resource
         classes.add(ProdCatServices.class);
         return classes;
     }
