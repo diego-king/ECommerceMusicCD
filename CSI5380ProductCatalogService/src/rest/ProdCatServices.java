@@ -40,6 +40,7 @@
 
 package rest;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ws.rs.GET;
@@ -57,29 +58,33 @@ public class ProdCatServices {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("getCatList")
     public List<String> getCategoryList() {
-    	//DBAgent db = DBAgent.getInstance();
-    	//List<String> catList = db.getAllCatList();
-		return null;
+    	DBAgent db = DBAgent.getInstance();
+    	List<String> catList = db.getAllCatList();
+		return catList;
     }
     
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("getProdList/{category}")
-    public List<CD> getProductList (@PathParam("{category}") String category) {
-    	if ("".equals(category)) {
-    		
+    @Path("/getProdList/{category}")
+    public List<CD> getProductList (@PathParam("category") String category) {
+    	DBAgent db = DBAgent.getInstance();
+    	List<CD> prodList = new ArrayList<CD>();
+    	if ("all".equals(category)) {
+    		prodList = db.getAllProdList();
     	} else {
-    		
+    		prodList = db.getProdListByCat(category);
     	}
     	
-		return null;
+		return prodList;
     } 
     
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("getProdInfo/{productId}")
-    public CD getProductInfo(@PathParam("{productId}")String productId) {
-		return null;
+    @Path("getProdInfo/{cdid}")
+    public List<CD> getProductInfo(@PathParam("cdid")String cdid) {
+    	DBAgent db = DBAgent.getInstance();
+    	List<CD> cdInfoList = db.getProdInfo(cdid);
+		return cdInfoList;
     }
 
 }

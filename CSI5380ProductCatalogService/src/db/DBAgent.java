@@ -82,14 +82,14 @@ public class DBAgent {
     * @param parameters
     * @return
     */
-   private List<Map> getQueryResult(String queryId, List<String> parameters) {
+   private List<Map<String, String>> getQueryResult(String queryId, List<String> parameters) {
 	   ResourceBundle dbConfig = ResourceBundle.getBundle(QUERY_CONFIG_FILE);
 	   String query = dbConfig.getString(queryId);
 	   
 	   Connection connection = null;
 	   PreparedStatement  statement = null;
 	   ResultSet resultSet = null;
-	   List<Map> results = new ArrayList<Map>();
+	   List<Map<String, String>> results = new ArrayList<Map<String, String>>();
 	   
 	   try {
 	       connection = ds.getConnection();
@@ -132,11 +132,48 @@ public class DBAgent {
    }
    
    public List<String> getAllCatList() {
-	   List<Map> catList = this.getQueryResult(DBAgent.GET_CAT_LIST_QUERY, new ArrayList());
+	   List<Map<String, String>> catList = this.getQueryResult(DBAgent.GET_CAT_LIST_QUERY, new ArrayList());
 	   List<String> tmpList = new ArrayList<String>();
 	   for (Map<String, String> tmpMap : catList) {
 		   tmpList.add(tmpMap.get("category"));
 	   }
+	   return tmpList;
+   }
+   
+   public List<CD> getAllProdList() {
+	   List<Map<String, String>> prodList = this.getQueryResult(DBAgent.GET_ALL_PRODUCT_QUERY, new ArrayList());
+	   List<CD> tmpList = convertMapToCD(prodList);
+	   return tmpList;
+   }
+
+   private List<CD> convertMapToCD(List<Map<String, String>> prodList) {
+	   List<CD> tmpList = new ArrayList<CD>();
+	   for (Map<String, String> tmpMap : prodList) {
+		   String cdId = (String) tmpMap.get("cdid");
+		   String title = (String) tmpMap.get("title");
+		   String priceStr = (String) tmpMap.get("price");
+		   int price = Integer.parseInt(priceStr);
+		   String category = (String) tmpMap.get("category");
+		   String imgUrl = (String) tmpMap.get("img_url");
+		   CD tmpCD = new CD(cdId, title, price, category, imgUrl);
+		   tmpList.add(tmpCD);
+	   }
+	   return tmpList;
+   }
+   
+   public List<CD> getProdListByCat(String category) {
+	   List<String> params = new ArrayList<String>();
+	   params.add(category);
+	   List<Map<String, String>> prodList = this.getQueryResult(DBAgent.GET_PROD_LIST_BY_CAT_QUERY, params);
+	   List<CD> tmpList = convertMapToCD(prodList);
+	   return tmpList;
+   }
+   
+   public List<CD> getProdInfo(String cdid) {
+	   List<String> params = new ArrayList<String>();
+	   params.add(cdid);
+	   List<Map<String, String>> cdInfoList = this.getQueryResult(DBAgent.GET_PROD_INFO_QUERY, params);
+	   List<CD> tmpList = convertMapToCD(cdInfoList);
 	   return tmpList;
    }
 }
