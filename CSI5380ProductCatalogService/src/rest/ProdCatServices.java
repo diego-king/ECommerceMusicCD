@@ -51,7 +51,7 @@ import javax.ws.rs.core.MediaType;
 import db.DBAgent;
 import entity.CD;
 
-@Path("product")
+@Path("/product")
 public class ProdCatServices {
 
     @GET
