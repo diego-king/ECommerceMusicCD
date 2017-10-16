@@ -1,9 +1,6 @@
 package ca.edu.uottawa.csi5380.api;
 
-import ca.edu.uottawa.csi5380.model.Address;
-import ca.edu.uottawa.csi5380.model.PurchaseEntry;
-import ca.edu.uottawa.csi5380.model.PurchaseOrder;
-import ca.edu.uottawa.csi5380.model.ShippingInfo;
+import ca.edu.uottawa.csi5380.model.*;
 import ca.edu.uottawa.csi5380.service.AuthorizationService;
 import ca.edu.uottawa.csi5380.service.OrderService;
 import io.swagger.annotations.Api;
@@ -59,13 +56,13 @@ public class OrderRestController {
 
     @ApiOperation(value = "Authorizes or declines an order.",
             notes = "Authorizes or declines the given order based on payment info, and stores shipping info with order. " +
-                    "Note: The addressList should contain (2) addresses - one for SHIPPING and one for BILLING.",
+                    "Note: The addressInfo should contain (2) addresses - one for SHIPPING and one for BILLING.",
             response = boolean.class)
     @RequestMapping(value = "/confirm/{id}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public boolean confirmOrder(@PathVariable long id, @RequestBody List<Address> addressList) {
+    public boolean confirmOrder(@PathVariable long id, @RequestBody AddressInfo addressInfo) {
         // TODO: do we need credit card number here?
-        LOGGER.info(String.format("confirmOrder() called with id %s and addressList %s", id, addressList.toString()));
-        return orderService.confirmOrder(id, authorizationService.authorizeOrder(), addressList);
+        LOGGER.info(String.format("confirmOrder() called with id %s and addressList %s", id, addressInfo.toString()));
+        return orderService.confirmOrder(id, authorizationService.authorizeOrder(), addressInfo);
     }
 
 }

@@ -14,23 +14,20 @@ import java.util.List;
 public class PurchaseEntry {
 
     private Customer customer;
-    private Address billingAddress;
-    private Address shippingAddress;
+    private AddressInfo addressInfo;
     private ShippingInfo shippingInfo;
     private List<PoItem> poItems;
 
     public PurchaseEntry() {
         this.customer = new Customer();
-        this.billingAddress = new Address();
-        this.shippingAddress = new Address();
+        this.addressInfo = new AddressInfo();
         this.shippingInfo = new ShippingInfo();
         this.poItems = new ArrayList<>();
     }
 
-    public PurchaseEntry(Customer customer, Address billingAddress, Address shippingAddress, ShippingInfo shippingInfo, List<PoItem> poItems) {
+    public PurchaseEntry(Customer customer, AddressInfo addressInfo, ShippingInfo shippingInfo, List<PoItem> poItems) {
         this.customer = customer;
-        this.billingAddress = billingAddress;
-        this.shippingAddress = shippingAddress;
+        this.addressInfo = addressInfo;
         this.shippingInfo = shippingInfo;
         this.poItems = poItems;
     }
@@ -44,20 +41,12 @@ public class PurchaseEntry {
         this.customer = customer;
     }
 
-    public Address getBillingAddress() {
-        return billingAddress;
+    public AddressInfo getAddressInfo() {
+        return addressInfo;
     }
 
-    public void setBillingAddress(Address billingAddress) {
-        this.billingAddress = billingAddress;
-    }
-
-    public Address getShippingAddress() {
-        return shippingAddress;
-    }
-
-    public void setShippingAddress(Address shippingAddress) {
-        this.shippingAddress = shippingAddress;
+    public void setAddressInfo(AddressInfo addressInfo) {
+        this.addressInfo = addressInfo;
     }
 
     public ShippingInfo getShippingInfo() {
@@ -80,8 +69,7 @@ public class PurchaseEntry {
     public String toString() {
         return "PurchaseEntry{" +
                 "customer=" + customer +
-                ", billingAddress=" + billingAddress +
-                ", shippingAddress=" + shippingAddress +
+                ", addressInfo=" + addressInfo +
                 ", shippingInfo=" + shippingInfo +
                 ", poItems=" + poItems +
                 '}';

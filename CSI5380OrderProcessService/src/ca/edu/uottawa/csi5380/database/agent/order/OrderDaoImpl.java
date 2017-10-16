@@ -54,10 +54,10 @@ public class OrderDaoImpl implements OrderDao {
         po.setCustomerId(p.getCustomer().getId());
 
         // Set Shipping Address ID
-        po.setShippingAddressId(p.getShippingAddress().getId());
+        po.setShippingAddressId(p.getAddressInfo().getShippingAddress().getId());
 
         // Set Billing Address ID
-        po.setBillingAddressId(p.getBillingAddress().getId());
+        po.setBillingAddressId(p.getAddressInfo().getBillingAddress().getId());
 
         // Set Shipping Type ID
         po.setShippingTypeId(p.getShippingInfo().getId());
@@ -96,11 +96,10 @@ public class OrderDaoImpl implements OrderDao {
     }
 
     @Override
-    public boolean confirmOrder(long orderId, boolean isAuthorized, List<Address> addressList) {
+    public boolean confirmOrder(long orderId, boolean isAuthorized, AddressInfo addressInfo) {
 
-        if (addressList.size() < 2) {
-            throw new RestDaoException("Please provide a shipping and billing address.");
-        }
+        // Error checking
+        validateAddressInfo(addressInfo);
 
         // Update PO table with either PROCESSED or DENIED
         updatePurchaseOrderStatus(isAuthorized ? PoStatus.PROCESSED : PoStatus.DENIED, orderId);
@@ -108,14 +107,11 @@ public class OrderDaoImpl implements OrderDao {
         // Get existing order information
         PurchaseOrder existingOrder = getPurchaseOrderById(orderId);
 
-        // Update the Customer's shipping & billing address for existing order
-        for (Address a : addressList) {
-            if (a.isShippingAddress()) {
-                updateAddressById(a, existingOrder.getShippingAddressId());
-            } else {
-                updateAddressById(a, existingOrder.getBillingAddressId());
-            }
-        }
+        // Update the Customer's billing address for existing order
+        updateAddressById(addressInfo.getBillingAddress(), existingOrder.getBillingAddressId());
+
+        // Update the Customer's shipping address for existing order
+        updateAddressById(addressInfo.getShippingAddress(), existingOrder.getShippingAddressId());
 
         return isAuthorized;
     }
@@ -166,11 +162,23 @@ public class OrderDaoImpl implements OrderDao {
             throw new RestDaoException("Invalid customer ID. Please provide Customer information.");
         }
 
-        if (p.getBillingAddress().getId() < 1) {
+        validateAddressInfo(p.getAddressInfo());
+
+    }
+
+    /**
+     * Performs validation on the Address information to ensure it
+     * contains valid Billing and Shipping address information.
+     *
+     * @param a
+     */
+    private void validateAddressInfo(AddressInfo a) {
+
+        if (a.getBillingAddress().getId() < 1) {
             throw new RestDaoException("Invalid Billing address ID. Please provide a Billing address.");
         }
 
-        if (p.getShippingAddress().getId() < 1) {
+        if (a.getShippingAddress().getId() < 1) {
             throw new RestDaoException("Invalid Shipping address ID. Please provide a Shipping address.");
         }
 
