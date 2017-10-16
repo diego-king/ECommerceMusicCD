@@ -1,5 +1,7 @@
 package ca.edu.uottawa.csi5380.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class Address {
 
     private long id;
@@ -172,6 +174,16 @@ public class Address {
 
     public void setType(AddressType type) {
         this.type = type;
+    }
+
+    @JsonIgnore
+    public boolean isShippingAddress() {
+        return this.type.equals(AddressType.SHIPPING);
+    }
+
+    @JsonIgnore
+    public boolean isBillingAddress() {
+        return this.type.equals(AddressType.BILLING);
     }
 
     @Override

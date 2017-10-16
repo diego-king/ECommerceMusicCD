@@ -1,5 +1,7 @@
 package ca.edu.uottawa.csi5380.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.math.BigDecimal;
 
 public class PoItem {
@@ -67,6 +69,7 @@ public class PoItem {
      *
      * @return
      */
+    @JsonIgnore
     public BigDecimal getTotalPrice() {
         return unitPrice.multiply(new BigDecimal(numOrdered));
     }

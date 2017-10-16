@@ -3,13 +3,12 @@ package ca.edu.uottawa.csi5380.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Date;
 
 public class PurchaseOrder {
 
-    // NOTE: Don't need to set these ID's when creating a new order
     private long id;
     private long customerId;
     private long shippingAddressId;
@@ -22,10 +21,7 @@ public class PurchaseOrder {
     private PoStatus status;
 
     // Required to create new order
-    private Customer customer;
-    private List<Address> addressList;
-    private ShippingInfo shippingInfo;
-    private List<PoItem> poItems;
+    private PurchaseEntry purchaseEntry;
 
     public PurchaseOrder() {
         this.id = -1;
@@ -33,14 +29,16 @@ public class PurchaseOrder {
         this.shippingAddressId = -1;
         this.billingAddressId = -1;
         this.shippingTypeId = -1;
-        this.customer = new Customer();
-        this.addressList = new ArrayList<>();
-        this.shippingInfo = new ShippingInfo();
         this.date = Instant.now();
         this.status = PoStatus.ORDERED;
         this.subTotal = new BigDecimal(0);
         this.grandTotal = new BigDecimal(0);
-        this.poItems = new ArrayList<>();
+        this.purchaseEntry = new PurchaseEntry();
+    }
+
+    public PurchaseOrder(PurchaseEntry purchaseEntry) {
+        this();
+        this.purchaseEntry = purchaseEntry;
     }
 
     public PurchaseOrder(long id, long customerId, long shippingAddressId, long billingAddressId, long shippingTypeId, Instant date, PoStatus status,
@@ -56,34 +54,20 @@ public class PurchaseOrder {
         this.grandTotal = grandTotal;
     }
 
-    public PurchaseOrder(Customer customer, List<Address> addressList, ShippingInfo shippingInfo, List<PoItem> PoItems) {
-        this();
-        this.customer = customer;
-        this.addressList = addressList;
-        this.shippingInfo = shippingInfo;
-        this.poItems = PoItems;
-    }
-
-    public PurchaseOrder(long id, Customer customer, List<Address> addressList, Instant date, String status, BigDecimal subTotal, BigDecimal grandTotal, List<PoItem> PoItems) {
+    public PurchaseOrder(long id, Instant date, String status, BigDecimal subTotal, BigDecimal grandTotal) {
         this.id = id;
-        this.customer = customer;
-        this.addressList = addressList;
         this.date = date;
         this.status = PoStatus.valueOf(status);
         this.subTotal = subTotal;
         this.grandTotal = grandTotal;
-        this.poItems = PoItems;
     }
 
-    public PurchaseOrder(long id, Customer customer, List<Address> addressList, Instant date, PoStatus status, BigDecimal subTotal, BigDecimal grandTotal, List<PoItem> PoItems) {
+    public PurchaseOrder(long id, Instant date, PoStatus status, BigDecimal subTotal, BigDecimal grandTotal) {
         this.id = id;
-        this.customer = customer;
-        this.addressList = addressList;
         this.date = date;
         this.status = status;
         this.subTotal = subTotal;
         this.grandTotal = grandTotal;
-        this.poItems = PoItems;
     }
 
     public long getId() {
@@ -126,37 +110,13 @@ public class PurchaseOrder {
         this.shippingTypeId = shippingTypeId;
     }
 
-    public Customer getCustomer() {
-        return customer;
-    }
-
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
-    }
-
-    public List<Address> getAddressList() {
-        return addressList;
-    }
-
-    public void setAddressList(List<Address> addressList) {
-        this.addressList = addressList;
-    }
-
-    public ShippingInfo getShippingInfo() {
-        return shippingInfo;
-    }
-
-    public void setShippingInfo(ShippingInfo shippingInfo) {
-        this.shippingInfo = shippingInfo;
-    }
-
     public Instant getDate() {
         return date;
     }
 
     @JsonProperty("date")
     public String getDateString() {
-        return date.toString();
+        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date.from(date));
     }
 
     public void setDate(Instant date) {
@@ -187,12 +147,12 @@ public class PurchaseOrder {
         this.grandTotal = grandTotal;
     }
 
-    public List<PoItem> getPoItems() {
-        return poItems;
+    public PurchaseEntry getPurchaseEntry() {
+        return purchaseEntry;
     }
 
-    public void setPoItems(List<PoItem> poItems) {
-        this.poItems = poItems;
+    public void setPurchaseEntry(PurchaseEntry purchaseEntry) {
+        this.purchaseEntry = purchaseEntry;
     }
 
     @Override
@@ -203,14 +163,11 @@ public class PurchaseOrder {
                 ", shippingAddressId=" + shippingAddressId +
                 ", billingAddressId=" + billingAddressId +
                 ", shippingTypeId=" + shippingTypeId +
-                ", customer=" + customer +
-                ", addressList=" + addressList +
-                ", shippingInfo=" + shippingInfo +
-                ", date=" + date +
-                ", status=" + status +
                 ", subTotal=" + subTotal +
                 ", grandTotal=" + grandTotal +
-                ", poItems=" + poItems +
+                ", date=" + date +
+                ", status=" + status +
+                ", purchaseEntry=" + purchaseEntry +
                 '}';
     }
 }

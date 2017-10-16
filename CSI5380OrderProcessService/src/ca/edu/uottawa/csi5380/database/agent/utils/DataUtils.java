@@ -12,7 +12,8 @@ import java.util.List;
 
 public final class DataUtils {
 
-    private DataUtils() {}
+    private DataUtils() {
+    }
 
     public static List<Address> getAddressesFromResult(SqlRowSet r) {
         List<Address> addressList = new ArrayList<>();
@@ -44,6 +45,16 @@ public final class DataUtils {
                 r.getString("last_name"),
                 r.getString("email"),
                 r.getString("password"));
+
+    }
+
+    public static ShippingInfo getShippingInfoByIdFromResult(SqlRowSet r) {
+        if (!r.next()) return null;
+        return new ShippingInfo(
+                r.getLong("id"),
+                r.getString("company"),
+                r.getString("type"),
+                r.getBigDecimal("price"));
 
     }
 

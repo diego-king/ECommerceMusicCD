@@ -3,6 +3,7 @@ package ca.edu.uottawa.csi5380.service;
 import ca.edu.uottawa.csi5380.database.agent.order.OrderDao;
 import ca.edu.uottawa.csi5380.database.agent.order.OrderDaoImpl;
 import ca.edu.uottawa.csi5380.model.Address;
+import ca.edu.uottawa.csi5380.model.PurchaseEntry;
 import ca.edu.uottawa.csi5380.model.PurchaseOrder;
 import ca.edu.uottawa.csi5380.model.ShippingInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,8 +30,8 @@ public class OrderService implements OrderDao {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public PurchaseOrder createOrder(PurchaseOrder po) {
-        return orderDaoImpl.createOrder(po);
+    public PurchaseOrder createOrder(PurchaseEntry p) {
+        return orderDaoImpl.createOrder(p);
     }
 
     @Override

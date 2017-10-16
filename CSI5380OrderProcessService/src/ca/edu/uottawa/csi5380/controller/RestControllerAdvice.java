@@ -34,7 +34,7 @@ public class RestControllerAdvice {
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     @ExceptionHandler(SQLException.class)
     public @ResponseBody
-    ExceptionJsonInfo handleSQLtException(final HttpServletRequest request, final SQLException e) {
+    ExceptionJsonInfo handleSQLException(final HttpServletRequest request, final SQLException e) {
         LOGGER.error(e.getMessage(), e);
         return new ExceptionJsonInfo(request.getRequestURL().toString(), "Internal database error occurred.");
     }
