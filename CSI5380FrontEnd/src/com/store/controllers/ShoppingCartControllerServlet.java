@@ -13,9 +13,14 @@ import javax.servlet.http.HttpServletResponse;
  */
 @WebServlet(description = "Shopping Cart", urlPatterns = { "/cart" })
 public class ShoppingCartControllerServlet extends HttpServlet {
-	private static final long serialVersionUID = 1L;
+	
        
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = -7454188491631749919L;
+
+	/**
      * @see HttpServlet#HttpServlet()
      */
     public ShoppingCartControllerServlet() {
@@ -27,7 +32,7 @@ public class ShoppingCartControllerServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-	    RequestDispatcher dispatcher = this.getServletContext().getRequestDispatcher("/WEB-INF/cart.jsp");  
+	    RequestDispatcher dispatcher = this.getServletContext().getRequestDispatcher("/WEB-INF/jsp/cart.jsp");  
 	    dispatcher.forward(request, response);
 	}
 
