@@ -27,8 +27,8 @@ public class OrderService implements OrderDao {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public PurchaseOrder createOrder(PurchaseEntry p) {
-        return orderDaoImpl.createOrder(p);
+    public void createOrder(PurchaseEntry p) {
+        orderDaoImpl.createOrder(p);
     }
 
     @Override

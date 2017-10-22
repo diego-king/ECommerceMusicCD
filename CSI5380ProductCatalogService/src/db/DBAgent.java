@@ -66,13 +66,39 @@ public class DBAgent {
    }
    
    /**
-    * @deprecated Currently not used in Product Catalog service.
     * @param queryId
     * @param parameters
     * @return
     */
    private int executeSQL(String queryId, List<String> parameters) {
 	   int result = -1;
+	   ResourceBundle dbConfig = ResourceBundle.getBundle(QUERY_CONFIG_FILE);
+	   String query = dbConfig.getString(queryId);
+	   Connection connection = null;
+	   PreparedStatement  statement = null;
+	   try {
+		   connection = ds.getConnection();
+	       statement = connection.prepareStatement(query);
+	       int i = 1;
+	       for (String param : parameters) {
+	    	   statement.setString(i, param);
+	       }
+	       result = statement.executeUpdate();
+	   }  catch (Exception e) {
+		   e.printStackTrace();
+	   } finally {
+	       try {   
+	    	   if (statement != null) {
+	    		   statement.close(); 
+	    	   }
+	    	   
+	    	   if (connection != null) {
+	    		   connection.close();
+	    	   }
+	       } catch (SQLException e) {
+	    	   e.printStackTrace();
+           }
+	   }
 	   return result;
    }
    
@@ -95,8 +121,10 @@ public class DBAgent {
 	       connection = ds.getConnection();
 	       statement = connection.prepareStatement(query);
 	       
-	       for (String param : parameters)
-	    	   statement.setString(1, param);
+	       int index = 1;
+	       for (String param : parameters) {
+	    	   statement.setString(index, param);
+	       }
 	       
 	       resultSet = statement.executeQuery();
 	       

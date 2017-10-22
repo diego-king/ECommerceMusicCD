@@ -2,10 +2,15 @@ package ca.edu.uottawa.csi5380.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+/**
+ * Object to represent an Address of type shipping
+ * or billing and it's corresponding information.
+ *
+ * @author Kenny Byrd
+ */
 public class Address {
 
     private long id;
-    private long customerId;
     private String fullName;
     private String addressLine1;
     private String addressLine2;
@@ -18,7 +23,6 @@ public class Address {
 
     public Address() {
         this.id = -1;
-        this.customerId = -1;
         this.fullName = "";
         this.addressLine1 = "";
         this.addressLine2 = "";
@@ -32,7 +36,6 @@ public class Address {
 
     public Address(String fullName, String addressLine1, String addressLine2, String city, String province, String country, String zip, String phone, AddressType type) {
         this.id = -1;
-        this.customerId = -1;
         this.fullName = fullName;
         this.addressLine1 = addressLine1;
         this.addressLine2 = addressLine2;
@@ -46,7 +49,6 @@ public class Address {
 
     public Address(String fullName, String addressLine1, String addressLine2, String city, String province, String country, String zip, String phone, String type) {
         this.id = -1;
-        this.customerId = -1;
         this.fullName = fullName;
         this.addressLine1 = addressLine1;
         this.addressLine2 = addressLine2;
@@ -58,10 +60,9 @@ public class Address {
         this.type = AddressType.valueOf(type);
     }
 
-    public Address(long id, long customerId, String fullName, String addressLine1, String addressLine2, String city, String province,
+    public Address(long id, String fullName, String addressLine1, String addressLine2, String city, String province,
                    String country, String zip, String phone, String type) {
         this.id = id;
-        this.customerId = customerId;
         this.fullName = fullName;
         this.addressLine1 = addressLine1;
         this.addressLine2 = addressLine2;
@@ -73,10 +74,9 @@ public class Address {
         this.type = AddressType.valueOf(type);
     }
 
-    public Address(long id, long customerId, String fullName, String addressLine1, String addressLine2, String city, String province,
+    public Address(long id, String fullName, String addressLine1, String addressLine2, String city, String province,
                    String country, String zip, String phone, AddressType type) {
         this.id = id;
-        this.customerId = customerId;
         this.fullName = fullName;
         this.addressLine1 = addressLine1;
         this.addressLine2 = addressLine2;
@@ -94,14 +94,6 @@ public class Address {
 
     public void setId(long id) {
         this.id = id;
-    }
-
-    public long getCustomerId() {
-        return customerId;
-    }
-
-    public void setCustomerId(long customerId) {
-        this.customerId = customerId;
     }
 
     public String getFullName() {
@@ -190,7 +182,6 @@ public class Address {
     public String toString() {
         return "Address{" +
                 "id=" + id +
-                ", customerId=" + customerId +
                 ", fullName='" + fullName + '\'' +
                 ", addressLine1='" + addressLine1 + '\'' +
                 ", addressLine2='" + addressLine2 + '\'' +
@@ -202,4 +193,5 @@ public class Address {
                 ", type=" + type +
                 '}';
     }
+
 }

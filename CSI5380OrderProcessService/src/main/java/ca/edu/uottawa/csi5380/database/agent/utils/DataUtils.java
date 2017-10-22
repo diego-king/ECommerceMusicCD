@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 public final class DataUtils {
@@ -15,11 +16,9 @@ public final class DataUtils {
     private DataUtils() {
     }
 
-    public static List<Address> getAddressesFromResult(SqlRowSet r) {
-        List<Address> addressList = new ArrayList<>();
-        while (r.next()) {
-            addressList.add(new Address(r.getLong("id"),
-                    r.getLong("customer_id"),
+    public static Address getAddressFromResult(SqlRowSet r) {
+        if (!r.first()) return null;
+        return new Address(r.getLong("id"),
                     r.getString("full_name"),
                     r.getString("address_line_1"),
                     r.getString("address_line_2"),
@@ -29,9 +28,7 @@ public final class DataUtils {
                     r.getString("zip"),
                     r.getString("phone"),
                     r.getString("type")
-            ));
-        }
-        return addressList;
+            );
     }
 
     public static Customer getCustomerFromResult(SqlRowSet r) {
@@ -44,12 +41,13 @@ public final class DataUtils {
                 r.getString("first_name"),
                 r.getString("last_name"),
                 r.getString("email"),
-                r.getString("password"));
-
+                new String(Base64.getDecoder().decode(r.getString("password"))),
+                r.getLong("default_shipping_address_id"),
+                r.getLong("default_billing_address_id"));
     }
 
     public static ShippingInfo getShippingInfoByIdFromResult(SqlRowSet r) {
-        if (!r.next()) return null;
+        if (!r.first()) return null;
         return new ShippingInfo(
                 r.getLong("id"),
                 r.getString("company"),
@@ -84,12 +82,12 @@ public final class DataUtils {
                 getInstantFromString(r.getString("date")),
                 PoStatus.valueOf(r.getString("status")),
                 r.getBigDecimal("sub_total"),
-                r.getBigDecimal("sub_total"));
-
+                r.getBigDecimal("grand_total"),
+                r.getBigDecimal("tax_total"));
     }
 
     public static long getLastInsertIdFromResult(SqlRowSet r) {
-        r.first();
+        if (!r.first()) return -1;
         return r.getLong("id");
     }
 

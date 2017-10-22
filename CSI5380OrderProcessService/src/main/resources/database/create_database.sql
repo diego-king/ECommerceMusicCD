@@ -1,19 +1,22 @@
--- CREATE SCHEMA 'cd_store';
+DROP DATABASE cd_store;
+CREATE SCHEMA cd_store;
 
 -- NOTE: May need to execute below statement if database connection fails in project
+-- Where 'test123' is your root password
+
 -- GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY 'test123';
 
 /************************************
 Drop tables if they exist
 ************************************/
 
-DROP TABLE IF EXISTS CD;
-DROP TABLE IF EXISTS Address;
-DROP TABLE IF EXISTS PO;
-DROP TABLE IF EXISTS POItem;
-DROP TABLE IF EXISTS VisitEvent;
-DROP TABLE IF EXISTS Customer;
-DROP TABLE IF EXISTS ShippingInfo;
+# DROP TABLE IF EXISTS CD;
+# DROP TABLE IF EXISTS Address;
+# DROP TABLE IF EXISTS PO;
+# DROP TABLE IF EXISTS POItem;
+# DROP TABLE IF EXISTS VisitEvent;
+# DROP TABLE IF EXISTS Customer;
+# DROP TABLE IF EXISTS ShippingInfo;
 
 /************************************
  Create database tables
@@ -64,23 +67,34 @@ CREATE TABLE VisitEvent (
  * id : customer id
  * last_name : last name of customer
  * first_name : first name of customer
- * password : customer's account password
- * email : email addressList of customer
+ * password : customer's account password (encoded in Base64).
+ * email : email addressList of customer (this should be the username field on the UI)
+ * default_shipping_address_id: ID of default billing address
+ * default_billing_address_id: ID of default shipping address
  */
 CREATE TABLE Customer (
-  id         INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  last_name  VARCHAR(100) NOT NULL,
-  first_name VARCHAR(100) NOT NULL,
-  password   VARCHAR(255) NOT NULL,
-  email      VARCHAR(255) NOT NULL,
-  PRIMARY KEY (id)
+  id                          INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  last_name                   VARCHAR(100) NOT NULL,
+  first_name                  VARCHAR(100) NOT NULL,
+  password                    VARCHAR(255) NOT NULL,
+  email                       VARCHAR(255) NOT NULL,
+  default_shipping_address_id INT UNSIGNED NOT NULL,
+  default_billing_address_id INT UNSIGNED NOT NULL,
+  PRIMARY KEY (id),
+  FOREIGN KEY (default_shipping_address_id)
+  REFERENCES Address (id)
+    ON DELETE CASCADE,
+  FOREIGN KEY (default_billing_address_id)
+  REFERENCES Address (id)
+    ON DELETE CASCADE
 );
 
 /* Address Table
  *
  * id: Unique address id.
- * customer_id: Unique ID of the customer this address belongs to.
- * full_name: Full name of the customer who this address belongs to.
+ * full_name: Full name of the customer who this address belongs to:
+ * E.g.: First Name + Last Name and can include titles such as (Mr, Mrs, Miss, Dr, etc.).
+ *
  * address_line_1: Main address line (street number, street)
  * address_line_2: Secondary address line (Unit/apt #)
  * city: City
@@ -92,7 +106,6 @@ CREATE TABLE Customer (
  */
 CREATE TABLE Address (
   id             INT UNSIGNED                 NOT NULL AUTO_INCREMENT,
-  customer_id    INT UNSIGNED                 NOT NULL,
   full_name      VARCHAR(255)                 NOT NULL,
   address_line_1 VARCHAR(255)                 NOT NULL,
   address_line_2 VARCHAR(255)                 NOT NULL,
@@ -102,10 +115,7 @@ CREATE TABLE Address (
   zip            VARCHAR(20)                  NOT NULL,
   phone          VARCHAR(20),
   type           ENUM ('BILLING', 'SHIPPING') NOT NULL,
-  PRIMARY KEY (id),
-  FOREIGN KEY (customer_id)
-  REFERENCES Customer (id)
-    ON DELETE CASCADE
+  PRIMARY KEY (id)
 );
 
 /* Shipping Info Table
@@ -133,6 +143,7 @@ CREATE TABLE ShippingInfo (
  * status: Status of purchase (ordered, processed - order was approved, or denied).
  * sub_total: Total amount for the cost of all the CDs in the order before taxes and shipping applied.
  * grand_total: Total amount for the cost of the order including cost of CDs + shipping cost + tax.
+ * tax_total: Total amount of tax applied to the CDs amd shipping cost.
  */
 CREATE TABLE PO (
   id                  INT UNSIGNED                            NOT NULL AUTO_INCREMENT,
@@ -144,6 +155,7 @@ CREATE TABLE PO (
   status              ENUM ('ORDERED', 'PROCESSED', 'DENIED') NOT NULL DEFAULT 'ORDERED',
   sub_total           DECIMAL(15, 2)                          NOT NULL,
   grand_total         DECIMAL(15, 2)                          NOT NULL,
+  tax_total           DECIMAL(15, 2)                          NOT NULL,
   PRIMARY KEY (id),
   INDEX (customer_id),
   FOREIGN KEY (customer_id) REFERENCES Customer (id)
@@ -169,7 +181,7 @@ CREATE TABLE PO (
 CREATE TABLE POItem (
   po_id       INT UNSIGNED   NOT NULL,
   cd_id       VARCHAR(20)    NOT NULL,
-  unit_price DECIMAL(15, 2) NOT NULL,
+  unit_price  DECIMAL(15, 2) NOT NULL,
   num_ordered TINYINT        NOT NULL,
   PRIMARY KEY (po_id, cd_id),
   INDEX (po_id),
