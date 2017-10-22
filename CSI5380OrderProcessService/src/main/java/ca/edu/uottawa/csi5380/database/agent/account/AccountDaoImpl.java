@@ -5,10 +5,12 @@ import ca.edu.uottawa.csi5380.database.agent.utils.DataUtils;
 import ca.edu.uottawa.csi5380.exception.RestDaoException;
 import ca.edu.uottawa.csi5380.model.Account;
 import ca.edu.uottawa.csi5380.model.Address;
+import ca.edu.uottawa.csi5380.model.AddressInfo;
 import ca.edu.uottawa.csi5380.model.Customer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.Base64;
 import java.util.List;
 
 @Repository
@@ -18,7 +20,7 @@ public class AccountDaoImpl implements AccountDao {
     private static final String SQL_SELECT_LAST_INSERT_ID = "sql.select.last.insert.id";
 
     private static final String SQL_SELECT_CUSTOMER_BY_EMAIL = "sql.select.customer.by.email";
-    private static final String SQL_SELECT_ADDRESSES_BY_ID = "sql.select.addresses.by.id";
+    private static final String SQL_SELECT_ADDRESS_BY_ID = "sql.select.address.by.id";
 
     // SQL INSERT KEYS
     private static final String SQL_INSERT_CUSTOMER = "sql.insert.customer";
@@ -51,13 +53,16 @@ public class AccountDaoImpl implements AccountDao {
             throw new RestDaoException("Customer account already exists with the given username.");
         }
 
+        // Insert shipping address
+        insertAddress(account.getDefaultAddressInfo().getShippingAddress());
+        long shippingId = getLastInsertId();
+
+        // Insert billing address
+        insertAddress(account.getDefaultAddressInfo().getBillingAddress());
+        long billingId = getLastInsertId();
+
         // Insert Customer
-        insertCustomer(account.getCustomer());
-
-        long customerId = getLastInsertId();
-
-        // Insert addresses
-        account.getAddressList().forEach(a -> insertAddress(a, customerId));
+        insertCustomer(account.getCustomer(), shippingId, billingId);
 
     }
 
@@ -72,35 +77,47 @@ public class AccountDaoImpl implements AccountDao {
     @Override
     public Account getAccount(String username, String password) {
         Customer c = confirmCustomerWithCredentials(username, password);
-        return new Account(c, getAddressById(c.getId()));
+        // should use default IDs to get addresses
+        return new Account(c, new AddressInfo(
+                getAddressById(c.getDefaultBillingAddressId()),
+                getAddressById(c.getDefaultShippingAddressId())));
     }
 
     /**
-     * Get the list of addresses for the Customer using their ID.
+     * Get an address by it's ID from the database.
      *
-     * @param id - Customer ID
+     * @param id - Address ID
      * @return
      */
-    private List<Address> getAddressById(long id) {
-        return DataUtils.getAddressesFromResult(dataAgent.getQueryResult(SQL_SELECT_ADDRESSES_BY_ID, new Object[]{id}));
+    private Address getAddressById(long id) {
+        return DataUtils.getAddressFromResult(dataAgent.getQueryResult(SQL_SELECT_ADDRESS_BY_ID, new Object[]{id}));
     }
 
     private Customer getCustomerByUsername(String username) {
         return DataUtils.getCustomerFromResult(dataAgent.getQueryResult(SQL_SELECT_CUSTOMER_BY_EMAIL, new Object[]{username}));
     }
 
-    private void insertCustomer(Customer c) {
-        dataAgent.executeSQL(SQL_INSERT_CUSTOMER, new Object[]{c.getFirstName(), c.getLastName(), c.getPassword(), c.getEmail()});
+    /**
+     * Insert a new Customer into the database with the default billing
+     * and shipping foreign keys. The customer's password will also be encoded
+     * in Base64.
+     *
+     * @param c
+     * @param shippingId
+     * @param billingId
+     */
+    private void insertCustomer(Customer c, long shippingId, long billingId) {
+        dataAgent.executeSQL(SQL_INSERT_CUSTOMER, new Object[]{c.getFirstName(), c.getLastName(),
+                Base64.getEncoder().encodeToString(c.getPassword().getBytes()), c.getEmail(), shippingId, billingId});
     }
 
     /**
-     * Insert an address into the database given the address and customer ID foreign key.
+     * Insert an address into the database given the address.
      *
-     * @param a          - Address to insert
-     * @param customerId - Customer ID
+     * @param a - Address to insert
      */
-    private void insertAddress(Address a, long customerId) {
-        dataAgent.executeSQL(SQL_INSERT_ADDRESS, new Object[]{customerId, a.getFullName(), a.getAddressLine1(),
+    private void insertAddress(Address a) {
+        dataAgent.executeSQL(SQL_INSERT_ADDRESS, new Object[]{a.getFullName(), a.getAddressLine1(),
                 a.getAddressLine2(), a.getCity(), a.getProvince(), a.getCountry(), a.getZip(),
                 a.getPhone(), a.getType().toString()});
     }

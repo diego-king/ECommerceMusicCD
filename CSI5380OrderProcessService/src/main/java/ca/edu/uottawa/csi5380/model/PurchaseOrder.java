@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.Date;
+import java.util.List;
 
 public class PurchaseOrder {
 
@@ -17,11 +18,15 @@ public class PurchaseOrder {
 
     private BigDecimal subTotal;
     private BigDecimal grandTotal;
+    private BigDecimal taxTotal;
     private Instant date;
     private PoStatus status;
 
-    // Required to create new order
-    private PurchaseEntry purchaseEntry;
+    private Customer customer;
+    private Address shippingAddress;
+    private Address billingAddress;
+    private ShippingInfo shippingInfo;
+    private List<PoItem> poItems; // Retrieve using id and customerId
 
     public PurchaseOrder() {
         this.id = -1;
@@ -33,16 +38,11 @@ public class PurchaseOrder {
         this.status = PoStatus.ORDERED;
         this.subTotal = new BigDecimal(0);
         this.grandTotal = new BigDecimal(0);
-        this.purchaseEntry = new PurchaseEntry();
+        this.taxTotal = new BigDecimal(0);
     }
 
-    public PurchaseOrder(PurchaseEntry purchaseEntry) {
-        this();
-        this.purchaseEntry = purchaseEntry;
-    }
-
-    public PurchaseOrder(long id, long customerId, long shippingAddressId, long billingAddressId, long shippingTypeId, Instant date, PoStatus status,
-                         BigDecimal subTotal, BigDecimal grandTotal) {
+    public PurchaseOrder(long id, long customerId, long shippingAddressId, long billingAddressId, long shippingTypeId,
+                         Instant date, PoStatus status, BigDecimal subTotal, BigDecimal grandTotal, BigDecimal taxTotal) {
         this.id = id;
         this.customerId = customerId;
         this.shippingAddressId = shippingAddressId;
@@ -52,22 +52,45 @@ public class PurchaseOrder {
         this.status = status;
         this.subTotal = subTotal;
         this.grandTotal = grandTotal;
+        this.taxTotal = taxTotal;
     }
 
-    public PurchaseOrder(long id, Instant date, String status, BigDecimal subTotal, BigDecimal grandTotal) {
+    public PurchaseOrder(long id, Instant date, String status, BigDecimal subTotal, BigDecimal grandTotal, BigDecimal taxTotal) {
         this.id = id;
         this.date = date;
         this.status = PoStatus.valueOf(status);
         this.subTotal = subTotal;
         this.grandTotal = grandTotal;
+        this.taxTotal = taxTotal;
     }
 
-    public PurchaseOrder(long id, Instant date, PoStatus status, BigDecimal subTotal, BigDecimal grandTotal) {
+    public PurchaseOrder(long id, Instant date, PoStatus status, BigDecimal subTotal, BigDecimal grandTotal, BigDecimal taxTotal) {
         this.id = id;
         this.date = date;
         this.status = status;
         this.subTotal = subTotal;
         this.grandTotal = grandTotal;
+        this.taxTotal = taxTotal;
+    }
+
+    public PurchaseOrder(long id, long customerId, long shippingAddressId, long billingAddressId, long shippingTypeId, BigDecimal subTotal,
+                         BigDecimal grandTotal, BigDecimal taxTotal, Instant date, PoStatus status, Customer customer,
+                         Address shippingAddress, Address billingAddress, ShippingInfo shippingInfo, List<PoItem> poItems) {
+        this.id = id;
+        this.customerId = customerId;
+        this.shippingAddressId = shippingAddressId;
+        this.billingAddressId = billingAddressId;
+        this.shippingTypeId = shippingTypeId;
+        this.subTotal = subTotal;
+        this.grandTotal = grandTotal;
+        this.taxTotal = taxTotal;
+        this.date = date;
+        this.status = status;
+        this.customer = customer;
+        this.shippingAddress = shippingAddress;
+        this.billingAddress = billingAddress;
+        this.shippingInfo = shippingInfo;
+        this.poItems = poItems;
     }
 
     public long getId() {
@@ -147,12 +170,52 @@ public class PurchaseOrder {
         this.grandTotal = grandTotal;
     }
 
-    public PurchaseEntry getPurchaseEntry() {
-        return purchaseEntry;
+    public BigDecimal getTaxTotal() {
+        return taxTotal;
     }
 
-    public void setPurchaseEntry(PurchaseEntry purchaseEntry) {
-        this.purchaseEntry = purchaseEntry;
+    public void setTaxTotal(BigDecimal taxTotal) {
+        this.taxTotal = taxTotal;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+
+    public Address getShippingAddress() {
+        return shippingAddress;
+    }
+
+    public void setShippingAddress(Address shippingAddress) {
+        this.shippingAddress = shippingAddress;
+    }
+
+    public Address getBillingAddress() {
+        return billingAddress;
+    }
+
+    public void setBillingAddress(Address billingAddress) {
+        this.billingAddress = billingAddress;
+    }
+
+    public ShippingInfo getShippingInfo() {
+        return shippingInfo;
+    }
+
+    public void setShippingInfo(ShippingInfo shippingInfo) {
+        this.shippingInfo = shippingInfo;
+    }
+
+    public List<PoItem> getPoItems() {
+        return poItems;
+    }
+
+    public void setPoItems(List<PoItem> poItems) {
+        this.poItems = poItems;
     }
 
     @Override
@@ -165,9 +228,14 @@ public class PurchaseOrder {
                 ", shippingTypeId=" + shippingTypeId +
                 ", subTotal=" + subTotal +
                 ", grandTotal=" + grandTotal +
+                ", taxTotal=" + taxTotal +
                 ", date=" + date +
                 ", status=" + status +
-                ", purchaseEntry=" + purchaseEntry +
+                ", customer=" + customer +
+                ", shippingAddress=" + shippingAddress +
+                ", billingAddress=" + billingAddress +
+                ", shippingInfo=" + shippingInfo +
+                ", poItems=" + poItems +
                 '}';
     }
 }

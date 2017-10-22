@@ -4,6 +4,7 @@ import ca.edu.uottawa.csi5380.database.agent.DataAgent;
 import ca.edu.uottawa.csi5380.database.agent.utils.DataUtils;
 import ca.edu.uottawa.csi5380.exception.RestDaoException;
 import ca.edu.uottawa.csi5380.model.*;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -18,13 +19,16 @@ public class OrderDaoImpl implements OrderDao {
     private static final String SQL_SELECT_SHIPPING_METHODS = "sql.select.shipping";
     private static final String SQL_SELECT_SHIPPING_METHOD_BY_ID = "sql.select.shipping.by.id";
     private static final String SQL_SELECT_ORDER_BY_ID = "sql.select.order.by.id";
+    private static final String SQL_SELECT_CUSTOMER_BY_EMAIL = "sql.select.customer.by.email";
 
     // SQL INSERT KEYS
+    private static final String SQL_INSERT_ADDRESS = "sql.insert.address";
     private static final String SQL_INSERT_ORDER = "sql.insert.order";
     private static final String SQL_INSERT_PO_ITEM = "sql.insert.poitem";
 
     // SQL UPDATE KEYS
-    private static final String SQL_UPDATE_ORDER_STATUS = "sql.update.order";
+    private static final String SQL_UPDATE_ORDER_STATUS = "sql.update.order.status";
+    private static final String SQL_UPDATE_ORDER_ADDRESSES = "sql.update.order.address";
     private static final String SQL_UPDATE_ADDRESS_BY_ID = "sql.update.address.by.id";
 
     private final DataAgent dataAgent;
@@ -40,34 +44,36 @@ public class OrderDaoImpl implements OrderDao {
     }
 
     @Override
-    public PurchaseOrder createOrder(PurchaseEntry p) {
+    public void createOrder(PurchaseEntry p) {
 
         // Error checking
         validatePurchaseEntry(p);
 
-        PurchaseOrder po = new PurchaseOrder(p);
+        PurchaseOrder po = new PurchaseOrder();
 
-        // Make sure we get the correct shipping info from the DB
-        p.setShippingInfo(getShippingInfoById(p.getShippingInfo().getId()));
+        // Get the necessary shipping info from the DB
+        ShippingInfo shippingInfo = getShippingInfoById(p.getShippingInfoId());
 
         // Set customer ID
-        po.setCustomerId(p.getCustomer().getId());
+        po.setCustomer(getCustomerByUsername(p.getCustomerEmail()));
 
         // Set Shipping Address ID
-        po.setShippingAddressId(p.getAddressInfo().getShippingAddress().getId());
+        po.setShippingAddressId(po.getCustomer().getDefaultShippingAddressId());
 
         // Set Billing Address ID
-        po.setBillingAddressId(p.getAddressInfo().getBillingAddress().getId());
+        po.setBillingAddressId(po.getCustomer().getDefaultBillingAddressId());
 
         // Set Shipping Type ID
-        po.setShippingTypeId(p.getShippingInfo().getId());
+        po.setShippingTypeId(shippingInfo.getId());
 
         // Calculate sub total
         po.setSubTotal(calcSubtotal(p.getPoItems()));
 
-        // TODO: Maybe add in custom taxes based on shipping address province/postal code
-        // Calculate grand total (sub total + tax (0.13) and shipping costs)
-        po.setGrandTotal(calcGrandTotal(po.getSubTotal(), p.getShippingInfo().getPrice(), new BigDecimal(0.13)));
+        // Calculate tax amount ((subtotal + shipping) * 0.13)
+        po.setTaxTotal(calcTax(po.getSubTotal(), shippingInfo.getPrice()));
+
+        // Calculate grand total (subtotal + shipping + tax)
+        po.setGrandTotal(calcGrandTotal(po.getSubTotal(), shippingInfo.getPrice(), po.getTaxTotal()));
 
         // Create new purchase order with status "ORDERED"
         insertPurchaseOrder(po);
@@ -80,7 +86,6 @@ public class OrderDaoImpl implements OrderDao {
             insertPoItem(poItem);
         }
 
-        return po;
     }
 
     private BigDecimal calcSubtotal(List<PoItem> orderedItems) {
@@ -91,42 +96,65 @@ public class OrderDaoImpl implements OrderDao {
         return subTotal;
     }
 
+    private BigDecimal calcTax(BigDecimal subTotal, BigDecimal shippingCost) {
+        return new BigDecimal(0).add(subTotal).add(shippingCost).multiply(new BigDecimal(0.13));
+    }
+
     private BigDecimal calcGrandTotal(BigDecimal subTotal, BigDecimal shippingCost, BigDecimal tax) {
-        return new BigDecimal(0).add(subTotal).add(shippingCost).multiply(new BigDecimal(1).add(tax));
+        return new BigDecimal(0).add(subTotal).add(shippingCost).add(tax);
     }
 
     @Override
     public boolean confirmOrder(long orderId, boolean isAuthorized, AddressInfo addressInfo) {
 
-        // Error checking
-        validateAddressInfo(addressInfo);
-
-        // Update PO table with either PROCESSED or DENIED
+        // Update the Purchase Order's status to PROCESSED or DENIED
         updatePurchaseOrderStatus(isAuthorized ? PoStatus.PROCESSED : PoStatus.DENIED, orderId);
 
-        // Get existing order information
-        PurchaseOrder existingOrder = getPurchaseOrderById(orderId);
-
         // Update the Customer's billing address for existing order
-        updateAddressById(addressInfo.getBillingAddress(), existingOrder.getBillingAddressId());
+        insertAddress(addressInfo.getShippingAddress());
+        long shippingId = getLastInsertId();
 
         // Update the Customer's shipping address for existing order
-        updateAddressById(addressInfo.getShippingAddress(), existingOrder.getShippingAddressId());
+        insertAddress(addressInfo.getBillingAddress());
+        long billingId = getLastInsertId();
+
+        // Update the Purchase Order's shipping and billing address with their verified address
+        updateOrderAddresses(shippingId, billingId, orderId);
 
         return isAuthorized;
+    }
+
+    /**
+     * Insert an address into the database given the address.
+     *
+     * @param a - Address to insert
+     */
+    private void insertAddress(Address a) {
+        dataAgent.executeSQL(SQL_INSERT_ADDRESS, new Object[]{a.getFullName(), a.getAddressLine1(),
+                a.getAddressLine2(), a.getCity(), a.getProvince(), a.getCountry(), a.getZip(),
+                a.getPhone(), a.getType().toString()});
+    }
+
+
+    private Customer getCustomerByUsername(String username) {
+        return DataUtils.getCustomerFromResult(dataAgent.getQueryResult(SQL_SELECT_CUSTOMER_BY_EMAIL, new Object[]{username}));
     }
 
     private long getLastInsertId() {
         return DataUtils.getLastInsertIdFromResult(dataAgent.getQueryResult(SQL_SELECT_LAST_INSERT_ID, new Object[]{}));
     }
 
-    private void updateAddressById(Address a, long id) {
+    private void updateAddressById(Address a) {
         dataAgent.executeSQL(SQL_UPDATE_ADDRESS_BY_ID, new Object[]{a.getAddressLine1(), a.getAddressLine2(), a.getCity(),
-                a.getProvince(), a.getCountry(), a.getZip(), a.getPhone(), id});
+                a.getProvince(), a.getCountry(), a.getZip(), a.getPhone(), a.getId()});
     }
 
     private void updatePurchaseOrderStatus(PoStatus status, long id) {
         dataAgent.executeSQL(SQL_UPDATE_ORDER_STATUS, new Object[]{status.toString(), id});
+    }
+
+    private void updateOrderAddresses(long shippingId, long billingId, long orderId) {
+        dataAgent.executeSQL(SQL_UPDATE_ORDER_ADDRESSES, new Object[]{shippingId, billingId, orderId});
     }
 
     private PurchaseOrder getPurchaseOrderById(long id) {
@@ -154,32 +182,12 @@ public class OrderDaoImpl implements OrderDao {
      */
     private void validatePurchaseEntry(PurchaseEntry p) {
 
-        if (p.getShippingInfo().getId() < 1) {
-            throw new RestDaoException("Invalid shipping info ID. Please provide Shipping information.");
+        if (p.getShippingInfoId() < 1) {
+            throw new RestDaoException("Invalid shipping info ID. Please provide an ID for Shipping information.");
         }
 
-        if (p.getCustomer().getId() < 1) {
-            throw new RestDaoException("Invalid customer ID. Please provide Customer information.");
-        }
-
-        validateAddressInfo(p.getAddressInfo());
-
-    }
-
-    /**
-     * Performs validation on the Address information to ensure it
-     * contains valid Billing and Shipping address information.
-     *
-     * @param a
-     */
-    private void validateAddressInfo(AddressInfo a) {
-
-        if (a.getBillingAddress().getId() < 1) {
-            throw new RestDaoException("Invalid Billing address ID. Please provide a Billing address.");
-        }
-
-        if (a.getShippingAddress().getId() < 1) {
-            throw new RestDaoException("Invalid Shipping address ID. Please provide a Shipping address.");
+        if (StringUtils.isBlank(p.getCustomerEmail())) {
+            throw new RestDaoException("Invalid customer ID. Please provide a Customer email (username).");
         }
 
     }

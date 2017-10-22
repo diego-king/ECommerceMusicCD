@@ -62,32 +62,47 @@ The album has lyrical themes of nostalgia and anxiety about the possible effects
         17.99, 'Island', 'POP',
         'https://upload.wikimedia.org/wikipedia/en/0/04/Video_Killed_the_Radio_Star_single_cover.jpg');
 
-/* Dumping data for table 'Customer' */
-INSERT INTO Customer (id, first_name, last_name, password, email)
-VALUES (1, 'Liam', 'Peyton', 'password', 'liam_peyton@gmail.com');
-INSERT INTO Customer (id, first_name, last_name, password, email)
-VALUES (2, 'Peter', 'White', 'password', 'peter_white@gmail.com');
-INSERT INTO Customer (id, first_name, last_name, password, email)
-VALUES (3, 'Andy', 'Adler', 'password', 'andy_adler@gmail.com');
-
 /* Dumping data for table 'Address' */
-INSERT INTO Address (id, customer_id, full_name, address_line_1, address_line_2, city, province, country, zip, phone, type)
-VALUES (1, 1, 'Liam Peyton', '123 King Edward', '', 'Ottawa', 'ON', 'Canada', 'K1E 6T5', '613-123-4567', 'BILLING');
+INSERT INTO Address (id, full_name, address_line_1, address_line_2, city, province, country, zip, phone, type)
+VALUES (1, 'Liam Peyton', '123 King Edward', '', 'Ottawa', 'ON', 'Canada', 'K1E 6T5', '613-123-4567', 'BILLING');
 
-INSERT INTO Address (id, customer_id, full_name, address_line_1, address_line_2, city, province, country, zip, phone, type)
-VALUES (2, 1, 'Liam Peyton', '123 King Edward', '', 'Ottawa', 'ON', 'Canada', 'K1E 6T5', '613-123-4567', 'SHIPPING');
+INSERT INTO Address (id, full_name, address_line_1, address_line_2, city, province, country, zip, phone, type)
+VALUES (2, 'Liam Peyton', '123 King Edward', '', 'Ottawa', 'ON', 'Canada', 'K1E 6T5', '613-123-4567', 'SHIPPING');
 
-INSERT INTO Address (id, customer_id, full_name, address_line_1, address_line_2, city, province, country, zip, phone, type)
-VALUES (3, 2, 'Peter White', '34 Rue St-Dominique', '', 'Gatineau', 'QC', 'Canada', 'K2E 6K5', '514-123-8569', 'BILLING');
+INSERT INTO Address (id, full_name, address_line_1, address_line_2, city, province, country, zip, phone, type)
+VALUES (3, 'Peter White', '34 Rue St-Dominique', '', 'Gatineau', 'QC', 'Canada', 'K2E 6K5', '514-123-8569', 'BILLING');
 
-INSERT INTO Address (id, customer_id, full_name, address_line_1, address_line_2, city, province, country, zip, phone, type)
-VALUES (4, 2, 'Peter White', '34 Rue St-Dominique', '', 'Gatineau', 'QC', 'Canada', 'K2E 6K5', '514-123-8569', 'SHIPPING');
+INSERT INTO Address (id, full_name, address_line_1, address_line_2, city, province, country, zip, phone, type)
+VALUES (4, 'Peter White', '34 Rue St-Dominique', '', 'Gatineau', 'QC', 'Canada', 'K2E 6K5', '514-123-8569', 'SHIPPING');
 
-INSERT INTO Address (id, customer_id, full_name, address_line_1, address_line_2, city, province, country, zip, phone, type)
-VALUES (5, 3, 'Andy Adler', '99 Main St.', '', 'Ottawa', 'ON', 'Canada', 'K6E 9T5', '613-123-9568', 'BILLING');
+INSERT INTO Address (id, full_name, address_line_1, address_line_2, city, province, country, zip, phone, type)
+VALUES (5, 'Andy Adler', '99 Main St.', '', 'Ottawa', 'ON', 'Canada', 'K6E 9T5', '613-123-9568', 'BILLING');
 
-INSERT INTO Address (id, customer_id, full_name, address_line_1, address_line_2, city, province, country, zip, phone, type)
-VALUES (6, 3, 'Andy Adler', '99 Main St.', '', 'Ottawa', 'ON', 'Canada', 'K6E 9T5', '613-123-9568', 'SHIPPING');
+INSERT INTO Address (id, full_name, address_line_1, address_line_2, city, province, country, zip, phone, type)
+VALUES (6, 'Andy Adler', '99 Main St.', '', 'Ottawa', 'ON', 'Canada', 'K6E 9T5', '613-123-9568', 'SHIPPING');
+
+/* Dumping data for table 'Customer' */
+INSERT INTO Customer (id, first_name, last_name, password, email, default_shipping_address_id, default_billing_address_id)
+VALUES (1, 'Liam', 'Peyton', 'cGFzc3dvcmQ=', 'liam_peyton@gmail.com', 2, 1);
+INSERT INTO Customer (id, first_name, last_name, password, email, default_shipping_address_id, default_billing_address_id)
+VALUES (2, 'Peter', 'White', 'cGFzc3dvcmQ=', 'peter_white@gmail.com', 4, 3);
+INSERT INTO Customer (id, first_name, last_name, password, email, default_shipping_address_id, default_billing_address_id)
+VALUES (3, 'Andy', 'Adler', 'cGFzc3dvcmQ=', 'andy_adler@gmail.com', 6, 5);
+
+/* Insert data into the Shipping table */
+INSERT INTO ShippingInfo (id, company, type, price) VALUES (1, 'Canada Post', 'Priority', 20.00);
+INSERT INTO ShippingInfo (id, company, type, price) VALUES (2, 'Canada Post', 'Xpresspost', 15.00);
+INSERT INTO ShippingInfo (id, company, type, price) VALUES (3, 'Canada Post', 'Regular', 10.00);
+
+/* Dumping data for table 'PO' - Purchase Order */
+INSERT INTO PO (id, customer_id, shipping_address_id, billing_address_id, shipping_type_id, date, status, sub_total, grand_total, tax_total)
+VALUES (1, 1, 2, 1, 3, '2017-10-01 09:19:00', 'PROCESSED', 15.99, 29.37, 3.38);
+
+INSERT INTO PO (id, customer_id, shipping_address_id, billing_address_id, shipping_type_id, date, status, sub_total, grand_total, tax_total)
+VALUES (2, 2, 4, 3, 1, '2017-10-02 08:20:00', 'DENIED', 20.00, 45.20, 5.20);
+
+INSERT INTO PO (id, customer_id, shipping_address_id, billing_address_id, shipping_type_id, date, status, sub_total, grand_total, tax_total)
+VALUES (3, 3, 6, 5, 2, '2017-10-03 10:38:00', 'ORDERED', 17.99, 37.28, 4.29);
 
 /* Dumping data for table 'POitem' - Purchase Order Item */
 INSERT INTO POItem (po_id, cd_id, unit_price, num_ordered) VALUES (1, 'cd001', 15.99, 1);
@@ -104,18 +119,3 @@ INSERT INTO VisitEvent (date, cd_id, eventtype) VALUES ('2017-10-02 08:20:00', '
 INSERT INTO VisitEvent (date, cd_id, eventtype) VALUES ('2017-10-03 10:18:00', 'cd003', 'VIEW');
 INSERT INTO VisitEvent (date, cd_id, eventtype) VALUES ('2017-10-03 10:28:00', 'cd003', 'CART');
 INSERT INTO VisitEvent (date, cd_id, eventtype) VALUES ('2017-10-03 10:38:00', 'cd003', 'PURCHASE');
-
-/* Insert data into the Shipping table */
-INSERT INTO ShippingInfo (id, company, type, price) VALUES (1, 'Canada Post', 'Priority', 20.00);
-INSERT INTO ShippingInfo (id, company, type, price) VALUES (2, 'Canada Post', 'Xpresspost', 15.00);
-INSERT INTO ShippingInfo (id, company, type, price) VALUES (3, 'Canada Post', 'Regular', 10.00);
-
-/* Dumping data for table 'PO' - Purchase Order */
-INSERT INTO PO (id, customer_id, shipping_address_id, billing_address_id, shipping_type_id, date, status, sub_total, grand_total)
-VALUES (1, 1, 2, 1, 3, '2017-10-01 09:19:00', 'PROCESSED', 15.99, 29.37);
-
-INSERT INTO PO (id, customer_id, shipping_address_id, billing_address_id, shipping_type_id, date, status, sub_total, grand_total)
-VALUES (2, 2, 4, 3, 1, '2017-10-02 08:20:00', 'DENIED', 20.00, 45.20);
-
-INSERT INTO PO (id, customer_id, shipping_address_id, billing_address_id, shipping_type_id, date, status, sub_total, grand_total)
-VALUES (3, 3, 6, 5, 2, '2017-10-03 10:38:00', 'ORDERED', 17.99, 37.28);

@@ -1,20 +1,24 @@
 package ca.edu.uottawa.csi5380.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
+/**
+ * Holds Customer information, including their
+ * default Billing and Shipping address information.
+ *
+ * @author Kenny Byrd
+ */
 public class Account {
 
     private Customer customer;
-    private List<Address> addressList;
+    private AddressInfo defaultAddressInfo;
 
-    public Account() {
-        this.customer = new Customer();
-        this.addressList = new ArrayList<>();
-    }
-    public Account(Customer customer, List<Address> addressList) {
+    public Account(Customer customer, AddressInfo defaultAddressInfo) {
         this.customer = customer;
-        this.addressList = addressList;
+        this.defaultAddressInfo = defaultAddressInfo;
+    }
+
+    public Account(Customer customer) {
+        this.customer = customer;
+        this.defaultAddressInfo = new AddressInfo();
     }
 
     public Customer getCustomer() {
@@ -25,19 +29,19 @@ public class Account {
         this.customer = customer;
     }
 
-    public List<Address> getAddressList() {
-        return addressList;
+    public AddressInfo getDefaultAddressInfo() {
+        return defaultAddressInfo;
     }
 
-    public void setAddressList(List<Address> addressList) {
-        this.addressList = addressList;
+    public void setDefaultAddressInfo(AddressInfo defaultAddressInfo) {
+        this.defaultAddressInfo = defaultAddressInfo;
     }
 
     @Override
     public String toString() {
         return "Account{" +
                 "customer=" + customer +
-                ", addressList=" + addressList +
+                ", defaultAddressInfo=" + defaultAddressInfo +
                 '}';
     }
 

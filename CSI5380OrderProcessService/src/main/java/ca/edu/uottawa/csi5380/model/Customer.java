@@ -1,12 +1,25 @@
 package ca.edu.uottawa.csi5380.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.util.Base64;
+
+/**
+ * Represents a Customer of the CD Store. This contains
+ * basic information about the customer to identify them
+ * for accessing their account.
+ *
+ * @author Kenny Byrd
+ */
 public class Customer {
 
     private long id;
     private String firstName;
     private String lastName;
-    private String email;
+    private String email; // Customer's login username
     private String password;
+    private long defaultShippingAddressId; // Do not need when creating new account
+    private long defaultBillingAddressId; // Do not need when creating new account
 
     public Customer() {
         this.id = -1;
@@ -14,22 +27,25 @@ public class Customer {
         this.lastName = "";
         this.email = "";
         this.password = "";
+        this.defaultShippingAddressId = -1;
+        this.defaultBillingAddressId = -1;
     }
 
     public Customer(String firstName, String lastName, String email, String password) {
-        this.id = -1;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
     }
 
-    public Customer(long id, String firstName, String lastName, String email, String password) {
+    public Customer(long id, String firstName, String lastName, String email, String password, long defaultShippingAddressId, long defaultBillingAddressId) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
+        this.defaultShippingAddressId = defaultShippingAddressId;
+        this.defaultBillingAddressId = defaultBillingAddressId;
     }
 
     public long getId() {
@@ -68,8 +84,35 @@ public class Customer {
         return password;
     }
 
+    /**
+     * Override the default getPassword() for the Jackson mapper and
+     * return a Base64 encoded password.
+     *
+     * @return Password encoded in Base64.
+     */
+    @JsonProperty("password")
+    public String getEncodedPassword() {
+        return Base64.getEncoder().encodeToString(password.getBytes());
+    }
+
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public long getDefaultShippingAddressId() {
+        return defaultShippingAddressId;
+    }
+
+    public void setDefaultShippingAddressId(long defaultShippingAddressId) {
+        this.defaultShippingAddressId = defaultShippingAddressId;
+    }
+
+    public long getDefaultBillingAddressId() {
+        return defaultBillingAddressId;
+    }
+
+    public void setDefaultBillingAddressId(long defaultBillingAddressId) {
+        this.defaultBillingAddressId = defaultBillingAddressId;
     }
 
     @Override
@@ -80,6 +123,8 @@ public class Customer {
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
+                ", defaultShippingAddressId=" + defaultShippingAddressId +
+                ", defaultBillingAddressId=" + defaultBillingAddressId +
                 '}';
     }
 }

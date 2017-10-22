@@ -13,48 +13,36 @@ import java.util.List;
  */
 public class PurchaseEntry {
 
-    private Customer customer;
-    private AddressInfo addressInfo;
-    private ShippingInfo shippingInfo;
+    private String customerEmail; // Customer's email/username
+    private long shippingInfoId;
     private List<PoItem> poItems;
 
     public PurchaseEntry() {
-        this.customer = new Customer();
-        this.addressInfo = new AddressInfo();
-        this.shippingInfo = new ShippingInfo();
+        this.customerEmail = "";
+        this.shippingInfoId = -1;
         this.poItems = new ArrayList<>();
     }
 
-    public PurchaseEntry(Customer customer, AddressInfo addressInfo, ShippingInfo shippingInfo, List<PoItem> poItems) {
-        this.customer = customer;
-        this.addressInfo = addressInfo;
-        this.shippingInfo = shippingInfo;
+    public PurchaseEntry(String customerEmail, long shippingInfoId, List<PoItem> poItems) {
+        this.customerEmail = customerEmail;
+        this.shippingInfoId = shippingInfoId;
         this.poItems = poItems;
     }
 
-    // Getters & Setters
-    public Customer getCustomer() {
-        return customer;
+    public String getCustomerEmail() {
+        return customerEmail;
     }
 
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
+    public void setCustomerEmail(String customerEmail) {
+        this.customerEmail = customerEmail;
     }
 
-    public AddressInfo getAddressInfo() {
-        return addressInfo;
+    public long getShippingInfoId() {
+        return shippingInfoId;
     }
 
-    public void setAddressInfo(AddressInfo addressInfo) {
-        this.addressInfo = addressInfo;
-    }
-
-    public ShippingInfo getShippingInfo() {
-        return shippingInfo;
-    }
-
-    public void setShippingInfo(ShippingInfo shippingInfo) {
-        this.shippingInfo = shippingInfo;
+    public void setShippingInfoId(long shippingInfoId) {
+        this.shippingInfoId = shippingInfoId;
     }
 
     public List<PoItem> getPoItems() {
@@ -68,9 +56,8 @@ public class PurchaseEntry {
     @Override
     public String toString() {
         return "PurchaseEntry{" +
-                "customer=" + customer +
-                ", addressInfo=" + addressInfo +
-                ", shippingInfo=" + shippingInfo +
+                "customerEmail='" + customerEmail + '\'' +
+                ", shippingInfoId=" + shippingInfoId +
                 ", poItems=" + poItems +
                 '}';
     }
