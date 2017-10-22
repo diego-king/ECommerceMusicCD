@@ -140,31 +140,3 @@ INSERT INTO VisitEvent (day, cdid, eventtype) VALUES ('01242002', 'cd003', 'CART
 INSERT INTO VisitEvent (day, cdid, eventtype) VALUES ('02252002', 'cd003', 'PURCHASE');
 #
 #
-
-/* Customer Table
- *
- * id : customer id
- * last_name : last name of customer
- * first_name : first name of customer
- * password : customer's account password
- * email : email 
- * 
- */
-CREATE TABLE Customer (
-  id         INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  last_name  VARCHAR(100) NOT NULL,
-  first_name VARCHAR(100) NOT NULL,
-  password   VARCHAR(255) NOT NULL,
-  email      VARCHAR(255) NOT NULL,
-  billing_addr_id  INT UNSIGNED NOT NULL,
-  shipping_addr_id INT UNSIGNED NOT NULL,
-  PRIMARY KEY (id)
-  FOREIGN KEY(billing_addr_id) REFERENCES Address(id)
-  FOREIGN KEY(shipping_addr_id) REFERENCES Address(id)
-);
-
-INSERT INTO Customer (id, first_name, last_name, password, email) VALUES (1, 'Liam', 'Peyton', 'password', 'liam_peyton@gmail.com');
-INSERT INTO Customer (id, first_name, last_name, password, email)
-VALUES (2, 'Peter', 'White', 'password', 'peter_white@gmail.com');
-INSERT INTO Customer (id, first_name, last_name, password, email)
-VALUES (3, 'Andy', 'Adler', 'password', 'andy_adler@gmail.com');
