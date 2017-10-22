@@ -69,12 +69,17 @@ public class ProdCatServices {
     public List<CD> getProductList (@PathParam("category") String category) {
     	DBAgent db = DBAgent.getInstance();
     	List<CD> prodList = new ArrayList<CD>();
-    	if ("all".equals(category)) {
-    		prodList = db.getAllProdList();
-    	} else {
-    		prodList = db.getProdListByCat(category);
-    	}
-    	
+    	prodList = db.getProdListByCat(category);
+		return prodList;
+    } 
+    
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/getProdList")
+    public List<CD> getProductList () {
+    	DBAgent db = DBAgent.getInstance();
+    	List<CD> prodList = new ArrayList<CD>();
+    	prodList = db.getAllProdList();
 		return prodList;
     } 
     

@@ -1,0 +1,25 @@
+<form class="item form-inline border border-dark rounded" role="form" style="padding: 1%;margin: 1%;">
+      <label class="sr-only" for="image">CDPicture</label>
+      <img src="" id="image">
+
+      <label class="sr-only" for="cdName">CDName</label>
+      <input type="text" readonly class="form-control-plaintext" id="cdName" name="cdName" value="aabbcc">
+
+      <label class="sr-only" for="unitPrice">untiPrice</label>
+      <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+            <div class="input-group-addon currency">$</div>
+            <input type="text" readonly class="form-control-plaintext" id="unitPrice" value="1122" name="unitPrice">
+      </div>
+
+      <label class="sr-only" for="quantity">quantity</label>
+      <input type="number" id="quantity" class="form-control" name="quantity" style="margin-right: 3%" min="1" value="2">
+
+      <label class="sr-only" for="totalPrice">totalPrice</label>
+      <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+            <div class="input-group-addon currency">$</div>
+            <input type="text" readonly class="form-control-plaintext" id="totalPrice" value="" name="totalPrice">
+      </div>
+      
+
+      <button type="button" class="btn btn-danger">Delete</button>
+</form>    
