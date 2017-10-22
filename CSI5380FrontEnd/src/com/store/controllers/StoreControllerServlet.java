@@ -27,7 +27,7 @@ public class StoreControllerServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-	    RequestDispatcher dispatcher = this.getServletContext().getRequestDispatcher("/WEB-INF/store.jsp");  
+	    RequestDispatcher dispatcher = this.getServletContext().getRequestDispatcher("/WEB-INF/jsp/store.jsp");  
 	    dispatcher.forward(request, response);
 	}
 
