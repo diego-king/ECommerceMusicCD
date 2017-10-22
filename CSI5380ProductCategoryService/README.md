@@ -9,4 +9,4 @@
 1. Run resources/database/create_database.sql
 2. Run resources/database/insert_data.sql
 
-**Swagger UI available at:** https://localhost:8444/swagger-ui.html
+**Swagger UI available at:** https://localhost:8445/swagger-ui.html
