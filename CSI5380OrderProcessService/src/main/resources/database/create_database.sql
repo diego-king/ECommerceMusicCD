@@ -11,13 +11,13 @@ USE cd_store;
 Drop tables if they exist
 ************************************/
 
-# DROP TABLE IF EXISTS CD;
-# DROP TABLE IF EXISTS Address;
-# DROP TABLE IF EXISTS PO;
-# DROP TABLE IF EXISTS POItem;
-# DROP TABLE IF EXISTS VisitEvent;
-# DROP TABLE IF EXISTS Customer;
-# DROP TABLE IF EXISTS ShippingInfo;
+-- DROP TABLE IF EXISTS CD;
+-- DROP TABLE IF EXISTS Address;
+-- DROP TABLE IF EXISTS PO;
+-- DROP TABLE IF EXISTS POItem;
+-- DROP TABLE IF EXISTS VisitEvent;
+-- DROP TABLE IF EXISTS Customer;
+-- DROP TABLE IF EXISTS ShippingInfo;
 
 /************************************
  Create database tables
