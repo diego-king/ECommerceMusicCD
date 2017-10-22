@@ -1,5 +1,6 @@
 DROP DATABASE cd_store;
-CREATE SCHEMA cd_store;
+CREATE DATABASE cd_store;
+USE cd_store;
 
 -- NOTE: May need to execute below statement if database connection fails in project
 -- Where 'test123' is your root password
