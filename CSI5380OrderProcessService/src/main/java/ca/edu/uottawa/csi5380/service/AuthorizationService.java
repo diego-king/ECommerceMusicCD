@@ -29,11 +29,19 @@ public class AuthorizationService {
      */
     public boolean authorizeOrder(String creditCardNum) {
         // Reject every 5th request
-        LOGGER.info("Order #: " + (counter.get()+1));
-        boolean isAutoRejected = counter.incrementAndGet() % 5 != 0;
-        return isAutoRejected || validateCreditCard(creditCardNum);
-    }
+        LOGGER.info("Authorizing Order Request #: " + (counter.get()+1));
+        boolean isAutoAuthorized = counter.incrementAndGet() % 5 != 0;
+        if (!isAutoAuthorized) {
+            LOGGER.info("Order Request was automatically rejected (every 5th request must be rejected).");
+            return false;
+        }
 
+        boolean isValidCC = validateCreditCard(creditCardNum);
+        if (!isValidCC) {
+            LOGGER.info("Order Request was rejected. Invalid credit card number format.");
+        }
+        return isValidCC;
+    }
 
     public boolean validateCreditCard(String creditCardNum) {
         return creditCardValidator.isValid(creditCardNum);

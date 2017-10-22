@@ -54,8 +54,9 @@ public class OrderDaoImpl implements OrderDao {
         // Get the necessary shipping info from the DB
         ShippingInfo shippingInfo = getShippingInfoById(p.getShippingInfoId());
 
-        // Set customer ID
+        // Set customer username and ID
         po.setCustomer(getCustomerByUsername(p.getCustomerEmail()));
+        po.setCustomerId(po.getCustomer().getId());
 
         // Set Shipping Address ID
         po.setShippingAddressId(po.getCustomer().getDefaultShippingAddressId());
@@ -69,11 +70,14 @@ public class OrderDaoImpl implements OrderDao {
         // Calculate sub total
         po.setSubTotal(calcSubtotal(p.getPoItems()));
 
+        // Set Shipping Cost
+        po.setShippingTotal(shippingInfo.getPrice());
+
         // Calculate tax amount ((subtotal + shipping) * 0.13)
-        po.setTaxTotal(calcTax(po.getSubTotal(), shippingInfo.getPrice()));
+        po.setTaxTotal(calcTax(po.getSubTotal(), po.getShippingTotal()));
 
         // Calculate grand total (subtotal + shipping + tax)
-        po.setGrandTotal(calcGrandTotal(po.getSubTotal(), shippingInfo.getPrice(), po.getTaxTotal()));
+        po.setGrandTotal(calcGrandTotal(po.getSubTotal(), po.getShippingTotal(), po.getTaxTotal()));
 
         // Create new purchase order with status "ORDERED"
         insertPurchaseOrder(po);
@@ -163,7 +167,8 @@ public class OrderDaoImpl implements OrderDao {
 
     private void insertPurchaseOrder(PurchaseOrder po) {
         dataAgent.executeSQL(SQL_INSERT_ORDER, new Object[]{po.getCustomerId(), po.getShippingAddressId(),
-                po.getBillingAddressId(), po.getShippingTypeId(), po.getDateString(), po.getSubTotal(), po.getGrandTotal()});
+                po.getBillingAddressId(), po.getShippingTypeId(), po.getDateString(), po.getSubTotal(),
+                po.getGrandTotal(), po.getTaxTotal(), po.getShippingTotal()});
     }
 
     private void insertPoItem(PoItem poItem) {

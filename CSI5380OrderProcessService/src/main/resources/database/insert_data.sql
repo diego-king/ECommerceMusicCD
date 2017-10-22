@@ -95,14 +95,14 @@ INSERT INTO ShippingInfo (id, company, type, price) VALUES (2, 'Canada Post', 'X
 INSERT INTO ShippingInfo (id, company, type, price) VALUES (3, 'Canada Post', 'Regular', 10.00);
 
 /* Dumping data for table 'PO' - Purchase Order */
-INSERT INTO PO (id, customer_id, shipping_address_id, billing_address_id, shipping_type_id, date, status, sub_total, grand_total, tax_total)
-VALUES (1, 1, 2, 1, 3, '2017-10-01 09:19:00', 'PROCESSED', 15.99, 29.37, 3.38);
+INSERT INTO PO (id, customer_id, shipping_address_id, billing_address_id, shipping_type_id, date, status, sub_total, grand_total, tax_total, shipping_total)
+VALUES (1, 1, 2, 1, 3, '2017-10-01 09:19:00', 'PROCESSED', 15.99, 29.37, 3.38, 10.00);
 
-INSERT INTO PO (id, customer_id, shipping_address_id, billing_address_id, shipping_type_id, date, status, sub_total, grand_total, tax_total)
-VALUES (2, 2, 4, 3, 1, '2017-10-02 08:20:00', 'DENIED', 20.00, 45.20, 5.20);
+INSERT INTO PO (id, customer_id, shipping_address_id, billing_address_id, shipping_type_id, date, status, sub_total, grand_total, tax_total, shipping_total)
+VALUES (2, 2, 4, 3, 1, '2017-10-02 08:20:00', 'DENIED', 20.00, 45.20, 5.20, 20.00);
 
-INSERT INTO PO (id, customer_id, shipping_address_id, billing_address_id, shipping_type_id, date, status, sub_total, grand_total, tax_total)
-VALUES (3, 3, 6, 5, 2, '2017-10-03 10:38:00', 'ORDERED', 17.99, 37.28, 4.29);
+INSERT INTO PO (id, customer_id, shipping_address_id, billing_address_id, shipping_type_id, date, status, sub_total, grand_total, tax_total, shipping_total)
+VALUES (3, 3, 6, 5, 2, '2017-10-03 10:38:00', 'ORDERED', 17.99, 37.28, 4.29, 15.00);
 
 /* Dumping data for table 'POitem' - Purchase Order Item */
 INSERT INTO POItem (po_id, cd_id, unit_price, num_ordered) VALUES (1, 'cd001', 15.99, 1);

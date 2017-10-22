@@ -19,6 +19,7 @@ public class PurchaseOrder {
     private BigDecimal subTotal;
     private BigDecimal grandTotal;
     private BigDecimal taxTotal;
+    private BigDecimal shippingTotal;
     private Instant date;
     private PoStatus status;
 
@@ -39,10 +40,12 @@ public class PurchaseOrder {
         this.subTotal = new BigDecimal(0);
         this.grandTotal = new BigDecimal(0);
         this.taxTotal = new BigDecimal(0);
+        this.shippingTotal = new BigDecimal(0);
     }
 
     public PurchaseOrder(long id, long customerId, long shippingAddressId, long billingAddressId, long shippingTypeId,
-                         Instant date, PoStatus status, BigDecimal subTotal, BigDecimal grandTotal, BigDecimal taxTotal) {
+                         Instant date, PoStatus status, BigDecimal subTotal, BigDecimal grandTotal, BigDecimal taxTotal,
+                         BigDecimal shippingTotal) {
         this.id = id;
         this.customerId = customerId;
         this.shippingAddressId = shippingAddressId;
@@ -53,44 +56,29 @@ public class PurchaseOrder {
         this.subTotal = subTotal;
         this.grandTotal = grandTotal;
         this.taxTotal = taxTotal;
+        this.shippingTotal = shippingTotal;
     }
 
-    public PurchaseOrder(long id, Instant date, String status, BigDecimal subTotal, BigDecimal grandTotal, BigDecimal taxTotal) {
+    public PurchaseOrder(long id, Instant date, String status, BigDecimal subTotal, BigDecimal grandTotal, BigDecimal taxTotal,
+                         BigDecimal shippingTotal) {
         this.id = id;
         this.date = date;
         this.status = PoStatus.valueOf(status);
         this.subTotal = subTotal;
         this.grandTotal = grandTotal;
         this.taxTotal = taxTotal;
+        this.shippingTotal = shippingTotal;
     }
 
-    public PurchaseOrder(long id, Instant date, PoStatus status, BigDecimal subTotal, BigDecimal grandTotal, BigDecimal taxTotal) {
+    public PurchaseOrder(long id, Instant date, PoStatus status, BigDecimal subTotal, BigDecimal grandTotal, BigDecimal taxTotal,
+            BigDecimal shippingTotal) {
         this.id = id;
         this.date = date;
         this.status = status;
         this.subTotal = subTotal;
         this.grandTotal = grandTotal;
         this.taxTotal = taxTotal;
-    }
-
-    public PurchaseOrder(long id, long customerId, long shippingAddressId, long billingAddressId, long shippingTypeId, BigDecimal subTotal,
-                         BigDecimal grandTotal, BigDecimal taxTotal, Instant date, PoStatus status, Customer customer,
-                         Address shippingAddress, Address billingAddress, ShippingInfo shippingInfo, List<PoItem> poItems) {
-        this.id = id;
-        this.customerId = customerId;
-        this.shippingAddressId = shippingAddressId;
-        this.billingAddressId = billingAddressId;
-        this.shippingTypeId = shippingTypeId;
-        this.subTotal = subTotal;
-        this.grandTotal = grandTotal;
-        this.taxTotal = taxTotal;
-        this.date = date;
-        this.status = status;
-        this.customer = customer;
-        this.shippingAddress = shippingAddress;
-        this.billingAddress = billingAddress;
-        this.shippingInfo = shippingInfo;
-        this.poItems = poItems;
+        this.shippingTotal = shippingTotal;
     }
 
     public long getId() {
@@ -178,6 +166,14 @@ public class PurchaseOrder {
         this.taxTotal = taxTotal;
     }
 
+    public BigDecimal getShippingTotal() {
+        return shippingTotal;
+    }
+
+    public void setShippingTotal(BigDecimal shippingTotal) {
+        this.shippingTotal = shippingTotal;
+    }
+
     public Customer getCustomer() {
         return customer;
     }
@@ -229,6 +225,7 @@ public class PurchaseOrder {
                 ", subTotal=" + subTotal +
                 ", grandTotal=" + grandTotal +
                 ", taxTotal=" + taxTotal +
+                ", shippingTotal=" + shippingTotal +
                 ", date=" + date +
                 ", status=" + status +
                 ", customer=" + customer +

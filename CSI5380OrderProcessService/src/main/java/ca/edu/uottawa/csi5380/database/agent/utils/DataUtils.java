@@ -83,7 +83,8 @@ public final class DataUtils {
                 PoStatus.valueOf(r.getString("status")),
                 r.getBigDecimal("sub_total"),
                 r.getBigDecimal("grand_total"),
-                r.getBigDecimal("tax_total"));
+                r.getBigDecimal("tax_total"),
+                r.getBigDecimal("shipping_total"));
     }
 
     public static long getLastInsertIdFromResult(SqlRowSet r) {
