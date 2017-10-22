@@ -8,8 +8,8 @@
 **Database Setup**
 1. Run resources/database/create_database.sql
 2. Run resources/database/insert_data.sql
-3. In application-dev.properties file, change following parameters based on your DB settings
-spring.datasource.username=<Your DB username>
-spring.datasource.password=<Your DB password>
+3. In application-dev.properties file, change following parameters based on your DB settings<br />
+	1) spring.datasource.username=<Your DB username><br />
+	2) spring.datasource.password=<Your DB password><br />
 
 **Swagger UI available at:** https://localhost:8445/swagger-ui.html
