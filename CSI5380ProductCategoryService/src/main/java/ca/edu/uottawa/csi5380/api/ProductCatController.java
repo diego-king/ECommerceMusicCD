@@ -1,6 +1,7 @@
 package ca.edu.uottawa.csi5380.api;
 
 import ca.edu.uottawa.csi5380.model.Cd;
+import ca.edu.uottawa.csi5380.model.CdWithQuantity;
 import ca.edu.uottawa.csi5380.service.ProductCatService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -59,4 +60,14 @@ public class ProductCatController {
         LOGGER.info(String.format("getProductInfo() called with id "+ id));
         return productCatService.getProductInfo(id);
     }
+    
+    @ApiOperation(value = "merge product Info and quanitty based on id, and quantity", 
+    		notes = "Returns product Info based on id.", 
+    		response = CdWithQuantity.class)
+    @RequestMapping(value = "/productInfo/{id}/{quantity}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody CdWithQuantity mergeProductWithQuantity(@PathVariable("id") String id, @PathVariable("quantity") int quantity) {
+        LOGGER.info(String.format("mergeProductWithQuantity() called with id "+ id));
+        Cd cd = productCatService.getProductInfo(id);
+        return new CdWithQuantity(cd, quantity);
+    }    
 }

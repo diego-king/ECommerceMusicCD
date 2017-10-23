@@ -1,4 +1,4 @@
-DROP DATABASE cd_store;
+DROP DATABASE IF EXISTS cd_store;
 CREATE DATABASE cd_store;
 USE cd_store;
 
@@ -63,33 +63,6 @@ CREATE TABLE VisitEvent (
     ON DELETE CASCADE
 );
 
-/* Customer Table
- *
- * id : customer id
- * last_name : last name of customer
- * first_name : first name of customer
- * password : customer's account password (encoded in Base64).
- * email : email addressList of customer (this should be the username field on the UI)
- * default_shipping_address_id: ID of default billing address
- * default_billing_address_id: ID of default shipping address
- */
-CREATE TABLE Customer (
-  id                          INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  last_name                   VARCHAR(100) NOT NULL,
-  first_name                  VARCHAR(100) NOT NULL,
-  password                    VARCHAR(255) NOT NULL,
-  email                       VARCHAR(255) NOT NULL,
-  default_shipping_address_id INT UNSIGNED NOT NULL,
-  default_billing_address_id INT UNSIGNED NOT NULL,
-  PRIMARY KEY (id),
-  FOREIGN KEY (default_shipping_address_id)
-  REFERENCES Address (id)
-    ON DELETE CASCADE,
-  FOREIGN KEY (default_billing_address_id)
-  REFERENCES Address (id)
-    ON DELETE CASCADE
-);
-
 /* Address Table
  *
  * id: Unique address id.
@@ -117,6 +90,33 @@ CREATE TABLE Address (
   phone          VARCHAR(20),
   type           ENUM ('BILLING', 'SHIPPING') NOT NULL,
   PRIMARY KEY (id)
+);
+
+/* Customer Table
+ *
+ * id : customer id
+ * last_name : last name of customer
+ * first_name : first name of customer
+ * password : customer's account password (encoded in Base64).
+ * email : email addressList of customer (this should be the username field on the UI)
+ * default_shipping_address_id: ID of default billing address
+ * default_billing_address_id: ID of default shipping address
+ */
+CREATE TABLE Customer (
+  id                          INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  last_name                   VARCHAR(100) NOT NULL,
+  first_name                  VARCHAR(100) NOT NULL,
+  password                    VARCHAR(255) NOT NULL,
+  email                       VARCHAR(255) NOT NULL,
+  default_shipping_address_id INT UNSIGNED NOT NULL,
+  default_billing_address_id  INT UNSIGNED NOT NULL,
+  PRIMARY KEY (id),
+  FOREIGN KEY (default_shipping_address_id)
+  REFERENCES Address (id)
+    ON DELETE CASCADE,
+  FOREIGN KEY (default_billing_address_id)
+  REFERENCES Address (id)
+    ON DELETE CASCADE
 );
 
 /* Shipping Info Table
@@ -155,8 +155,9 @@ CREATE TABLE PO (
   date                DATETIME                                NOT NULL,
   status              ENUM ('ORDERED', 'PROCESSED', 'DENIED') NOT NULL DEFAULT 'ORDERED',
   sub_total           DECIMAL(15, 2)                          NOT NULL,
-  grand_total         DECIMAL(15, 2)                          NOT NULL,
   tax_total           DECIMAL(15, 2)                          NOT NULL,
+  shipping_total      DECIMAL(15, 2)                          NOT NULL,
+  grand_total         DECIMAL(15, 2)                          NOT NULL,
   PRIMARY KEY (id),
   INDEX (customer_id),
   FOREIGN KEY (customer_id) REFERENCES Customer (id)

@@ -1,2 +1,5 @@
 # IntelliJ Project Files
 *.iml
+/.project
+/.classpath
+/.settings

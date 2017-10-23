@@ -28,15 +28,32 @@ public class AuthorizationService {
      * @return
      */
     public boolean authorizeOrder(String creditCardNum) {
+
         // Reject every 5th request
-        LOGGER.info("Order #: " + (counter.get()+1));
-        boolean isAutoRejected = counter.incrementAndGet() % 5 != 0;
-        return isAutoRejected || validateCreditCard(creditCardNum);
+        LOGGER.info("Authorizing Order Request #" + (counter.get()+1));
+
+        if (isOrderAutoRejected()) {
+            LOGGER.info("Order Request was automatically rejected (every 5th request must be rejected).");
+            return false;
+        }
+
+        if (!isValidCreditCard(creditCardNum)) {
+            LOGGER.info("Order Request was rejected. Invalid credit card number format.");
+            return false;
+        }
+
+        LOGGER.info("Order Request was successfully authorized!");
+
+        return true;
     }
 
-
-    public boolean validateCreditCard(String creditCardNum) {
+    public boolean isValidCreditCard(String creditCardNum) {
         return creditCardValidator.isValid(creditCardNum);
     }
+
+    private boolean isOrderAutoRejected() {
+        return counter.incrementAndGet() % 5 == 0;
+    }
+
 
 }

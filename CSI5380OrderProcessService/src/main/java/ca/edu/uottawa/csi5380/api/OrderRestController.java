@@ -46,9 +46,9 @@ public class OrderRestController {
     }
 
     @ApiOperation(value = "Creates a new purchase order.",
-            notes = "Creates a purchase order including shipping, taxes, total amount due based on shopping cart info. " +
-                    "The PurchaseEntry object MUST contain a Customer's username (email), shipping info ID (ID of shipping method - " +
-                    "E.g. Canada Post Priority Shipping ID is 1 in DB) and a list of PO items they're ordering.")
+            notes = "The PurchaseEntry object MUST contain a Customer's username (email), shipping info ID (ID of shipping method - " +
+                    "E.g. Canada Post Priority Shipping ID is 1 in DB) and a list of PO items they're ordering. " +
+                    "Note: PO Items DO NOT need a poId.")
     @RequestMapping(value = "/create", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.OK)
     public void createOrder(@ApiParam(value = "Basic Order information", required = true) @RequestBody PurchaseEntry p) {
@@ -57,9 +57,9 @@ public class OrderRestController {
     }
 
     @ApiOperation(value = "Authorizes or declines an order.",
-            notes = "Authorizes or declines the given order based on payment info, and stores shipping info with order. " +
-                    "Note: The addressInfo should contain (2) addresses - one for SHIPPING and one for BILLING. " +
-                    "IMPORTANT: The addresses do not need an address id, they will get created as new entries in the DB.",
+            notes = "Note: The addressInfo should contain (2) addresses - one for SHIPPING and one for BILLING. " +
+                    "IMPORTANT: The addresses DO NOT need an address id. Example valid CC number: (4556220405738943) " +
+                    "For more info see: https://www.freeformatter.com/credit-card-number-generator-validator.html",
             response = boolean.class)
     @RequestMapping(value = "/confirm/{id}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public boolean confirmOrder(@ApiParam(value = "ID of the order to confirm", required = true) @PathVariable long id,
