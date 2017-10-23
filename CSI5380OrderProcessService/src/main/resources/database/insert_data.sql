@@ -6,46 +6,46 @@
 INSERT INTO CD (id, title, artist, year, description, price, label, category, img_url)
 VALUES ('cd001', '16 Biggest Hits', 'Johnny Cash', 1999, 'The album is made of the biggest hits of Cash''s career like "Ring of Fire",
 "Understand Your Man", and "A Boy Named Sue". The album also contains several songs which weren''t hits such as "I Still Miss Someone", and "The Legend of John Henry''s Hammer".',
-        15.99, 'Sony', 'COUNTRY', 'image/cd/cd001.jpg');
+        15.99, 'Sony', 'COUNTRY', 'https://images-na.ssl-images-amazon.com/images/I/5188ENWBRAL._SX355_.jpg');
 
 INSERT INTO CD (id, title, artist, year, description, price, label, category, img_url)
 VALUES ('cd002', 'Greatest Hits (& Some That Will Be)', 'Willie Nelson', 1981,
         'Greatest Hits (& Some That Will Be) is a compilation album by country artist Willie Nelson. It was released in 1981 as a double-LP. It has sold 6 million copies worldwide.',
         15.99, 'Columbia', 'COUNTRY',
-        'image/cd/cd002.jpg');
+        'https://upload.wikimedia.org/wikipedia/en/9/95/Willie_Nelson_-_Greatest_Hits_%28%26_Some_That_Will_Be%29.jpg');
 
 INSERT INTO CD (id, title, artist, year, description, price, label, category, img_url)
 VALUES ('cd003', 'Showcase', 'Patsy Cline', 1961,
         'Showcase is a studio album by American country music singer Patsy Cline, recorded with The Jordanaires and released November 27, 1961.
         It was Cline''s second studio album and her first since Patsy Cline in 1957.',
-        15.99, 'Decca', 'COUNTRY', 'image/cd/cd003.jpg');
+        15.99, 'Decca', 'COUNTRY', 'https://upload.wikimedia.org/wikipedia/en/0/03/Patsy_Cline-_Original_Showcase.jpg');
 
 INSERT INTO CD (id, title, artist, year, description, price, label, category, img_url)
 VALUES ('cd004', 'Fully Completely', 'Tragically Hip', 1992, 'Fully Completely is the third studio album by Canadian rock band The Tragically Hip.
 The album was released in October 1992 and produced by Chris Tsangarides. The cover art was designed by Dutch artist Lieve Prins. It produced six singles:
 "Locked in the Trunk of a Car", "Fifty Mission Cap", "Courage (For Hugh MacLennan)", "At the Hundredth Meridian", "Looking for a Place to Happen",
  and "Fully Completely".', 20.00, 'MCA', 'ROCK',
-'image/cd/cd004.jpg');
+        'https://upload.wikimedia.org/wikipedia/en/thumb/c/c6/Fully_Completely.jpg/220px-Fully_Completely.jpg');
 
 INSERT INTO CD (id, title, artist, year, description, price, label, category, img_url)
 VALUES ('cd005', 'The White Album', 'The Beatles', 1968, 'The Beatles, also known as the White Album, is the ninth studio album by English rock
 group the Beatles, released on 22 November 1968. A double album, its plain white sleeve has no graphics or text other than the band''s name
 embossed,[a] which was intended as a direct contrast to the vivid cover artwork of the band''s earlier Sgt. Pepper''s Lonely Hearts Club Band.',
-        20.00, 'Apple', 'ROCK', 'image/cd/cd005.jpg');
+        20.00, 'Apple', 'ROCK', 'https://upload.wikimedia.org/wikipedia/commons/2/20/TheBeatles68LP.jpg');
 
 INSERT INTO CD (id, title, artist, year, description, price, label, category, img_url)
 VALUES ('cd006', 'Forty Licks', 'Rolling Stones', 2002, 'Forty Licks is a double compilation album by The Rolling Stones. A 40-year career-spanning
 retrospective, Forty Licks is notable for being the first retrospective to combine their formative Decca/London era of the 1960s, now licensed by
 ABKCO Records (on disc one), with their self-owned post-1970 material, distributed at the time by Virgin/EMI but now distributed by ABKCO''s own
 distributor Universal Music Group (on mostly disc two).', 20.00, 'Virgin/ABKCO/Decca', 'ROCK',
-'image/cd/cd006.jpg');
+        'https://upload.wikimedia.org/wikipedia/en/d/d1/Rollingstonesfortylicks.jpg');
 
 INSERT INTO CD (id, title, artist, year, description, price, label, category, img_url)
 VALUES ('cd007', 'The Immaculate Collection', 'Madonna', 1990,
         'The Immaculate Collection is the first greatest hits album by American singer and songwriter Madonna. It was released on November 9, 1990,
         by Sire and Warner Bros. Records. It contains new remixes of fifteen of her hit singles from 1983 to 1990, as well as two new songs, "Justify My Love" and "Rescue Me".',
         17.99, 'Sire/Warner Bros.', 'POP',
-        'image/cd/cd007.jpg');
+        'https://upload.wikimedia.org/wikipedia/en/5/51/Madonna_-_The_Immaculate_Collection.png');
 
 INSERT INTO CD (id, title, artist, year, description, price, label, category, img_url)
 VALUES ('cd008', 'Jagged Little Pill', 'Alannis Morissette', 1995, 'agged Little Pill is the third album by Canadian singer Alanis Morissette,
@@ -53,14 +53,14 @@ released in 1995 through Maverick. It was Morissette''s first album released out
 moving from her hometown, Ottawa, to Toronto; she made little progress until she traveled to Los Angeles, where she met producer Glen Ballard.
 Morissette and Ballard had an instant connection and began co-writing and experimenting with sounds.', 17.99,
         'Maverick/Reprise', 'POP',
-        'image/cd/cd008.jpg');
+        'https://upload.wikimedia.org/wikipedia/en/4/47/Alanis_Morissette_-_Jagged_Little_Pill.jpg');
 
 INSERT INTO CD (id, title, artist, year, description, price, label, category, img_url)
 VALUES ('cd009', 'The Age of Plastic', 'The Buggles', 1980, 'The Age of Plastic is the debut studio album by the British new wave duo The Buggles,
 composed of Trevor Horn and Geoff Downes. The name of the record was conceived from the group''s intention of being a "plastic group".
 The album has lyrical themes of nostalgia and anxiety about the possible effects of modern technology.',
         17.99, 'Island', 'POP',
-        'image/cd/cd009.jpg');
+        'https://upload.wikimedia.org/wikipedia/en/0/04/Video_Killed_the_Radio_Star_single_cover.jpg');
 
 /* Dumping data for table 'Address' */
 INSERT INTO Address (id, full_name, address_line_1, address_line_2, city, province, country, zip, phone, type)
