@@ -24,6 +24,12 @@ var data = [{
     unitPrice: '1234'
 }];
 
+// load data
+$.post('/CSI5380FrontEnd/getCDs', {category: $('select[name=categories]').val()}, function(data) {
+    //generateCDs(data);
+    console.log(data);
+});
+
 // load templates
 var generateCDs = function(inputData) {
     $('#cdArea').loadTemplate('template/cdTemplate.html',
@@ -38,9 +44,11 @@ generateCDs(data);
 
 // response to the change of category selection
 $('select[name=categories]').change(function() {
-    var categories = $(this).val();
-    console.log(categories);
-    /*$.post('/', categories, function(data) {
+    var postData = {
+        category: $(this).val()
+    };
+    console.log($(this).val());
+    /*$.post('/CSI5380FrontEnd/getCDs', postData, function(data) {
         generateCDs(data);
     })*/
 });

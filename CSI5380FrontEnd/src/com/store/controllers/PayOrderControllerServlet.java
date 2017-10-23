@@ -14,8 +14,8 @@ import javax.servlet.http.HttpSession;
 
 /**
  * Servlet implementation class for forwarding payment to order servlet
- * @author lycga
- * @version 2017-10-18
+ * @author Yicong Li
+ * @version 2017-10-22
  *
  */
 @WebServlet(description = "Pay a order", urlPatterns = {"/payOrder"})
