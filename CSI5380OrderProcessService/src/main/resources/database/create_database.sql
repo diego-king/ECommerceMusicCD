@@ -1,4 +1,4 @@
-DROP DATABASE cd_store;
+DROP DATABASE IF EXISTS cd_store;
 CREATE DATABASE cd_store;
 USE cd_store;
 
