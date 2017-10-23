@@ -11,14 +11,19 @@ public class Account {
     private Customer customer;
     private AddressInfo defaultAddressInfo;
 
-    public Account(Customer customer, AddressInfo defaultAddressInfo) {
-        this.customer = customer;
-        this.defaultAddressInfo = defaultAddressInfo;
+    public Account() {
+        this.customer = new Customer();
+        this.defaultAddressInfo = new AddressInfo();
     }
 
     public Account(Customer customer) {
         this.customer = customer;
         this.defaultAddressInfo = new AddressInfo();
+    }
+
+    public Account(Customer customer, AddressInfo defaultAddressInfo) {
+        this.customer = customer;
+        this.defaultAddressInfo = defaultAddressInfo;
     }
 
     public Customer getCustomer() {

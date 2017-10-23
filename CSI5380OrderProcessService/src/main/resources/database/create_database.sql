@@ -109,7 +109,7 @@ CREATE TABLE Customer (
   password                    VARCHAR(255) NOT NULL,
   email                       VARCHAR(255) NOT NULL,
   default_shipping_address_id INT UNSIGNED NOT NULL,
-  default_billing_address_id INT UNSIGNED NOT NULL,
+  default_billing_address_id  INT UNSIGNED NOT NULL,
   PRIMARY KEY (id),
   FOREIGN KEY (default_shipping_address_id)
   REFERENCES Address (id)
@@ -155,8 +155,9 @@ CREATE TABLE PO (
   date                DATETIME                                NOT NULL,
   status              ENUM ('ORDERED', 'PROCESSED', 'DENIED') NOT NULL DEFAULT 'ORDERED',
   sub_total           DECIMAL(15, 2)                          NOT NULL,
-  grand_total         DECIMAL(15, 2)                          NOT NULL,
   tax_total           DECIMAL(15, 2)                          NOT NULL,
+  shipping_total      DECIMAL(15, 2)                          NOT NULL,
+  grand_total         DECIMAL(15, 2)                          NOT NULL,
   PRIMARY KEY (id),
   INDEX (customer_id),
   FOREIGN KEY (customer_id) REFERENCES Customer (id)
