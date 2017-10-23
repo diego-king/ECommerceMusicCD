@@ -9,7 +9,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Servlet implementation class Store
+ * Servlet implementation class for shopping cart
+ * @author Yicong Li
+ * @version 2017-10-22
  */
 @WebServlet(description = "Shopping Cart", urlPatterns = { "/cart" })
 public class ShoppingCartControllerServlet extends HttpServlet {

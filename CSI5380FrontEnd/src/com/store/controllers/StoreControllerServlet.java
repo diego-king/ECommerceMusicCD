@@ -9,7 +9,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Servlet implementation class Store
+ * Servlet implementation class for cd store
+ * @author Yicong Li
+ * @version 2017-10-22
  */
 @WebServlet(description = "CD Store", urlPatterns = { "/store" })
 public class StoreControllerServlet extends HttpServlet {
