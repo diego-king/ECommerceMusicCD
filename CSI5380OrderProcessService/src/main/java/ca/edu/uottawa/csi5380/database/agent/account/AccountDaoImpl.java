@@ -3,6 +3,7 @@ package ca.edu.uottawa.csi5380.database.agent.account;
 import ca.edu.uottawa.csi5380.database.agent.DataAgent;
 import ca.edu.uottawa.csi5380.database.agent.utils.DataUtils;
 import ca.edu.uottawa.csi5380.exception.RestDaoException;
+import ca.edu.uottawa.csi5380.exception.UserNotFoundException;
 import ca.edu.uottawa.csi5380.model.Account;
 import ca.edu.uottawa.csi5380.model.Address;
 import ca.edu.uottawa.csi5380.model.AddressInfo;
@@ -77,7 +78,7 @@ public class AccountDaoImpl implements AccountDao {
     @Override
     public Account getAccount(String username, String password) {
         Customer c = confirmCustomerWithCredentials(username, password);
-        // should use default IDs to get addresses
+        // Use default Customer shipping and billing address IDs to get address info
         return new Account(c, new AddressInfo(
                 getAddressById(c.getDefaultBillingAddressId()),
                 getAddressById(c.getDefaultShippingAddressId())));
@@ -147,7 +148,7 @@ public class AccountDaoImpl implements AccountDao {
         Customer c = getCustomerByUsername(username);
 
         // Confirm there is a customer with the given username (email)
-        if (c == null) throw new RestDaoException("Customer does not exist with the given username.");
+        if (c == null) throw new UserNotFoundException("Customer does not exist with the given username.");
 
         // Confirm username/password combination is correct
         if (!checkCredentials(username, password, c)) {

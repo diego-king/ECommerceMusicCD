@@ -35,9 +35,10 @@ public class AccountRestController {
             notes = "Given the username and password, this method will determine if an account " +
                     "in the database exists with these exact credentials.")
     @ApiResponses(value = {
-            @ApiResponse(code = 400, message = "Login Successful."),
+            @ApiResponse(code = 200, message = "Login Successful."),
             @ApiResponse(code = 400, message = "Username/password does not match."),
-            @ApiResponse(code = 404, message = "Account not found.")
+            @ApiResponse(code = 404, message = "User account not found."),
+            @ApiResponse(code = 500, message = "Database or server error occurred.")
     })
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     @ResponseStatus(value = HttpStatus.OK)
@@ -52,6 +53,11 @@ public class AccountRestController {
                     "and stores default billing/shipping address. Fails if the email (account name) already exists. " +
                     "IMPORTANT: Addresses do not need IDs and Customer does not need default shipping IDs.")
     @RequestMapping(value = "/create", method = RequestMethod.POST)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Account created successfully."),
+            @ApiResponse(code = 400, message = "Account already exists with username."),
+            @ApiResponse(code = 500, message = "Database or server error occurred.")
+    })
     @ResponseStatus(value = HttpStatus.OK)
     public void createAccount(@ApiParam(value = "New Customer information", required = true) @RequestBody Account account) {
         LOGGER.info(String.format("createAccount() called with params: %s", account.toString()));
@@ -62,6 +68,12 @@ public class AccountRestController {
             notes = "Returns account information containing the Customer and default shipping/billing address. " +
                     "IMPORTANT: Customer's password will be returned in Base64 encoding.",
             response = Account.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully retrieved account."),
+            @ApiResponse(code = 400, message = "Username/password does not match."),
+            @ApiResponse(code = 404, message = "User account not found."),
+            @ApiResponse(code = 500, message = "Database or server error occurred.")
+    })
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public Account getAccount(@ApiParam(value = "Customer's email address", required = true) @RequestParam("username") String username,
                               @ApiParam(value = "Base64 encoded password", required = true) @RequestParam("password") String password) {
