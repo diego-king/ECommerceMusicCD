@@ -11,9 +11,6 @@ import ca.edu.uottawa.csi5380.model.Customer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.util.Base64;
-import java.util.List;
-
 @Repository
 public class AccountDaoImpl implements AccountDao {
 
@@ -100,8 +97,7 @@ public class AccountDaoImpl implements AccountDao {
 
     /**
      * Insert a new Customer into the database with the default billing
-     * and shipping foreign keys. The customer's password will also be encoded
-     * in Base64.
+     * and shipping foreign keys.
      *
      * @param c
      * @param shippingId
@@ -109,7 +105,7 @@ public class AccountDaoImpl implements AccountDao {
      */
     private void insertCustomer(Customer c, long shippingId, long billingId) {
         dataAgent.executeSQL(SQL_INSERT_CUSTOMER, new Object[]{c.getFirstName(), c.getLastName(),
-                Base64.getEncoder().encodeToString(c.getPassword().getBytes()), c.getEmail(), shippingId, billingId});
+                c.getPassword(), c.getEmail(), shippingId, billingId});
     }
 
     /**

@@ -10,8 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Base64;
-
 /**
  * Provides REST services for account related queries.
  *
@@ -43,9 +41,9 @@ public class AccountRestController {
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     @ResponseStatus(value = HttpStatus.OK)
     public void accountLogin(@ApiParam(value = "Customer's email address", required = true) @RequestParam("username") String username,
-                             @ApiParam(value = "Base64 encoded password", required = true) @RequestParam("password") String password) {
+                             @ApiParam(value = "Customer's password", required = true) @RequestParam("password") String password) {
         LOGGER.info(String.format("accountLogin() called with username %s and password %s", username, password));
-        accountService.accountLogin(username, new String(Base64.getDecoder().decode(password)));
+        accountService.accountLogin(username, password);
     }
 
     @ApiOperation(value = "Creates a new customer account.",
@@ -65,8 +63,7 @@ public class AccountRestController {
     }
 
     @ApiOperation(value = "Get a customer account.",
-            notes = "Returns account information containing the Customer and default shipping/billing address. " +
-                    "IMPORTANT: Customer's password will be returned in Base64 encoding.",
+            notes = "Returns account information containing the Customer and default shipping/billing address.",
             response = Account.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully retrieved account."),
@@ -76,9 +73,9 @@ public class AccountRestController {
     })
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public Account getAccount(@ApiParam(value = "Customer's email address", required = true) @RequestParam("username") String username,
-                              @ApiParam(value = "Base64 encoded password", required = true) @RequestParam("password") String password) {
+                              @ApiParam(value = "Customer's password", required = true) @RequestParam("password") String password) {
         LOGGER.info(String.format("getAccount() called with username %s and password %s", username, password));
-        return accountService.getAccount(username, new String(Base64.getDecoder().decode(password)));
+        return accountService.getAccount(username, password);
     }
 
 

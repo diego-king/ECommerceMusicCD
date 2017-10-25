@@ -1,9 +1,5 @@
 package ca.edu.uottawa.csi5380.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import java.util.Base64;
-
 /**
  * Represents a Customer of the CD Store. This contains
  * basic information about the customer to identify them
@@ -82,17 +78,6 @@ public class Customer {
 
     public String getPassword() {
         return password;
-    }
-
-    /**
-     * Override the default getPassword() for the Jackson mapper and
-     * return a Base64 encoded password.
-     *
-     * @return Password encoded in Base64.
-     */
-    @JsonProperty("password")
-    public String getEncodedPassword() {
-        return Base64.getEncoder().encodeToString(password.getBytes());
     }
 
     public void setPassword(String password) {

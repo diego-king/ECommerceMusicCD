@@ -97,7 +97,7 @@ CREATE TABLE Address (
  * id : customer id
  * last_name : last name of customer
  * first_name : first name of customer
- * password : customer's account password (encoded in Base64).
+ * password : customer's account password
  * email : email addressList of customer (this should be the username field on the UI)
  * default_shipping_address_id: ID of default billing address
  * default_billing_address_id: ID of default shipping address

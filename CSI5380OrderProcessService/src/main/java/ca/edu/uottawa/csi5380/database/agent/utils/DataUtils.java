@@ -8,7 +8,6 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
 
 public final class DataUtils {
@@ -41,7 +40,7 @@ public final class DataUtils {
                 r.getString("first_name"),
                 r.getString("last_name"),
                 r.getString("email"),
-                new String(Base64.getDecoder().decode(r.getString("password"))),
+                r.getString("password"),
                 r.getLong("default_shipping_address_id"),
                 r.getLong("default_billing_address_id"));
     }
