@@ -28,7 +28,7 @@
                     <div class="row">
                         <form class="col-sm-5">
                             <button type="button" class="btn btn-success" id="checkout">Checkout</button>
-                            <button type="button" class="btn btn-success" id="continue">Continue Shopping</button>
+                            <a href="./store" class="btn btn-success" role="continue">Continue Shopping</a>
                         </form>
                     </div>
                 </div>

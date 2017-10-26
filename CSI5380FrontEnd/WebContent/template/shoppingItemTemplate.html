@@ -1,19 +1,30 @@
-<form data-id="id" class="item form-inline border border-dark rounded" role="form" style="padding: 1%;margin: 1%;">
-      <label class="sr-only" for="image">CDPicture</label>
-      <img src="" id="image">
-      <input type="hidden" name="productId" data-value="productId">
+<form data-id="formId" class="item border border-dark rounded" role="form" style="padding: 1%;margin: 1%;">
+      <div class="form-row">
+            <div class="form-group col-sm-3">
+                <div class="form-row">
+                    <label class="sr-only" for="image">CDPicture</label>
+                    <img data-src="imgUrl" style="width: 50px; height: 50px;">
+                    <p data-content-text="title"></p>
+                </div>
+                <input type="hidden" name="productId" data-value="id">      
+            </div>
 
-      <label class="sr-only" for="cdName">CDName</label>
-      <input type="text" readonly class="form-control-plaintext" name="cdName" data-value="cdName">
+            <div class="form-group col-sm-2">
+                <p>$<span class="price" data-content-text="price"></span></p>
+            </div>
 
-      <label class="mr-sm-2" for="unitPrice">$</label>
-      <input type="text" readonly class="form-control-plaintext" data-value="unitPrice" name="unitPrice">
+            <div class="form-group col-sm-2">
+                  <label class="sr-only" for="quantity">quantity</label>
+                  <input type="number" class="form-control" name="quantity" min="1" data-value="quantity">
+            </div>
 
-      <label class="sr-only" for="quantity">quantity</label>
-      <input type="number" class="form-control" name="quantity" style="margin-right: 3%" min="0" data-value="quantity">
+            <div class="form-group col-sm-2">
+                <p>$<span class="totalPrice" data-content-text="totalPrice"></span></p>
+            </div>
 
-      <label class="mr-sm-2" for="totalPrice">$</label>
-      <input type="text" readonly class="form-control-plaintext" data-value="totalPrice" name="totalPrice">
-      
-      <button type="button" class="btn btn-danger">Delete</button>
+            <div class="form-group col-sm-1">
+                <button type="button" class="btn btn-danger">Delete</button>
+            </div>
+    
+      </div>
 </form>

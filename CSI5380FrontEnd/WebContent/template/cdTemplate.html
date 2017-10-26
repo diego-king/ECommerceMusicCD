@@ -35,21 +35,25 @@
 </div>-->
 
 <div class="card" style="width: 100%;">
-    <div class="card-header" role="tab" data-id="productId">
+    <div class="card-header" role="tab" data-id="id">
         <h5 class="mb-0">
-            <a data-toggle="collapse" data-href="herf" aria-expanded="true" data-content-text="cdName"></a>
+            <a data-toggle="collapse" data-href="herf" aria-expanded="true" data-content-text="title"></a>
         </h5>
     </div>
 
     <div data-id="detailId" class="collapse" role="tabpanel" data-parent="#cdArea">
         <div class="card-body">
-            <img data-src="imagePath">
-            <p data-content-text="cdDeatil"></p>
+            <img data-src="imgUrl">
+            <p>Artist: <span data-content-text="artist"></span></p>
+            <p>Year: <span data-content-text="year"></span></p>
+            <p data-content-text="description"></p>
             <p>
                 $
-                <span data-content-text="unitPrice"></span>
+                <span data-content-text="price"></span>
             </p>
+            <p>Label: <span data-content-text="label"></span></p>
             <button class="btn add">
+                <input type="hidden" name="id" data-value="id">
                 Add<i class="fa fa-cart-plus" aria-hidden="true"></i>
             </button>
         </div>

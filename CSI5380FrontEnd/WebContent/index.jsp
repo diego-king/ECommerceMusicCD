@@ -23,7 +23,7 @@
                         <h1>World CD Gallery</h1>
                         <h3>Collection of the most beautiful and classical music in the world</h3>
                         <hr>
-                        <a href="" class="btn btn-lg btn-light"><i aria-hidden="true"></i> Get started!</a>
+                        <a href="./store" class="btn btn-lg btn-light"><i aria-hidden="true"></i> Get started!</a>
                     </div>
                 </div>
             </div>

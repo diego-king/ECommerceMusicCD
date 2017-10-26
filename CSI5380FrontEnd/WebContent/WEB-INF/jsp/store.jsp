@@ -18,6 +18,7 @@
 
         <!-- container begins -->
         <div class="container">
+            <br>
             <div class="jumbotron">
                 <h1> 
                     <span class="glyphicon glyphicon-cd" aria-hidden="true"></span> World Famous CD Gallery
@@ -28,10 +29,17 @@
                 </p>
                 <div class="row">
                     <select name="categories" class="col-sm-4 rounded">
-                        <option value="Rock">Rock</option>
-                        <option value="Pop">Pop</option>
-                        <option value="Country">Country</option>
+                        <option value="COUNTRY">Country</option>
+                        <option value="ROCK">Rock</option>
+                        <option value="POP">Pop</option>
                     </select>
+                </div>
+                <br>
+                <div class="row">
+                    <a href="./cart" class="btn btn-primary" role="button">
+                        Shopping Cart
+                        <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+                    </a>
                 </div>
             </div>
             <!-- cd cover pictures and detail information -->

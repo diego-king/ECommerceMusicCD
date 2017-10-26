@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.store.utils.Paths;
+
 /**
  * Servlet implementation class for forwarding payment to order servlet
  * @author Yicong Li
@@ -34,11 +36,9 @@ public class PayOrderControllerServlet extends HttpServlet {
 		super();
 	}
 	
-	
+	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		//RequestDispatcher dispatcher = this.getServletContext().getRequestDispatcher("/");
-		//dispatcher.forward(request, response);
 		String postData = request.getParameter("data");
 		
 		// step 1: get the session object
@@ -48,8 +48,11 @@ public class PayOrderControllerServlet extends HttpServlet {
 		// step 2: set the session data value
 		session.setAttribute("session.order", postData);
 		
+		// testing
+		System.out.println(postData);
+		
 		// step 3: redirect to account order?
-		String redirectURL = "/CSI5380FrontEnd/account";
+		String redirectURL = Paths.CHECKOUT;
 
 		response.setContentType("text/plain");
 		response.setCharacterEncoding("UTF-8");
