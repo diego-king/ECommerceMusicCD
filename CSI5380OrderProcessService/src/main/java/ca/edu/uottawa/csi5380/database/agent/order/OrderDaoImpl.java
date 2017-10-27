@@ -44,7 +44,7 @@ public class OrderDaoImpl implements OrderDao {
     }
 
     @Override
-    public void createOrder(PurchaseEntry p) {
+    public long createOrder(PurchaseEntry p) {
 
         // Error checking
         validatePurchaseEntry(p);
@@ -89,6 +89,8 @@ public class OrderDaoImpl implements OrderDao {
             poItem.setPoId(po.getId());
             insertPoItem(poItem);
         }
+
+        return po.getId();
 
     }
 

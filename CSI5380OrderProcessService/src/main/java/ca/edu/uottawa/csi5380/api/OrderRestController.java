@@ -47,25 +47,25 @@ public class OrderRestController {
         return orderService.getShippingInfo();
     }
 
-    @ApiOperation(value = "Creates a new purchase order.",
+    @ApiOperation(value = "Creates a new purchase order, and returns the order ID.",
             notes = "The PurchaseEntry object MUST contain a Customer's username (email), shipping info ID (ID of shipping method - " +
                     "E.g. Canada Post Priority Shipping ID is 1 in DB) and a list of PO items they're ordering. " +
-                    "Note: PO Items DO NOT need a poId.")
+                    "Note: PO Items DO NOT need a poId.",
+            response = long.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Order created successfully."),
             @ApiResponse(code = 400, message = "Customer email(username) or shipping ID not provided."),
             @ApiResponse(code = 500, message = "Database or server error occurred.")
     })
     @RequestMapping(value = "/create", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseStatus(value = HttpStatus.OK)
-    public void createOrder(@ApiParam(value = "Basic Order information", required = true) @RequestBody PurchaseEntry p) {
+    public long createOrder(@ApiParam(value = "Basic Order information", required = true) @RequestBody PurchaseEntry p) {
         LOGGER.info(String.format("createOrder() called with params %s", p.toString()));
-        orderService.createOrder(p);
+        return orderService.createOrder(p);
     }
 
     @ApiOperation(value = "Authorizes or declines an order.",
             notes = "Note: The addressInfo should contain (2) addresses - one for SHIPPING and one for BILLING. " +
-                    "IMPORTANT: The addresses DO NOT need an address id. Example valid CC number: (4556220405738943) " +
+                    "IMPORTANT: The addresses DO NOT need a valid address id (use -1). Example valid CC number: (4556220405738943) " +
                     "For more info see: https://www.freeformatter.com/credit-card-number-generator-validator.html",
             response = boolean.class)
     @ApiResponses(value = {
