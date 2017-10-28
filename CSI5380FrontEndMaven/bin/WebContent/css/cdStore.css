@@ -1,0 +1,47 @@
+body {
+	padding-top: 70px;
+}
+
+.jumbotron{
+	color: #2c3e50;
+	background: #ecf0f1;
+}
+
+.navbar-default {
+	background: #2c3e50;
+}
+
+
+.navbar-default .navbar-nav>li>a {
+    color: white;
+}
+
+
+.navbar-default .navbar-brand {
+    color: white;
+}
+
+img {
+    width: 200px; 
+    height: 200px;
+    margin-top: 1%;
+}
+
+figure {
+    display: inline-block;
+    border: 1px dotted gray;
+    margin: 20px; /* adjust as needed */
+}
+
+figure figcaption {
+    border: 1px dotted blue;
+    text-align: center;
+}
+
+.cd {
+    float: left;
+    padding: 0.75rem;
+    margin-bottom: 2rem;
+    width: 33.333%;
+    border: 0;
+}

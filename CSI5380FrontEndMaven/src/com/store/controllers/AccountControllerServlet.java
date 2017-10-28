@@ -1,8 +1,11 @@
 package com.store.controllers;
 
 import java.io.IOException;
+import java.util.Base64;
 
-import javax.net.ssl.SSLContext;
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -17,7 +20,7 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.glassfish.jersey.SslConfigurator;
+import com.store.utils.Handshake;
 
 /**
  * Servlet implementation class AccountControllerServlet
@@ -38,7 +41,7 @@ public class AccountControllerServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		RequestDispatcher dispatcher = this.getServletContext().getRequestDispatcher("/WEB-INF/jsp/account.jsp");  
+		RequestDispatcher dispatcher = this.getServletContext().getRequestDispatcher("/WEB-INF/account.jsp");  
 	    dispatcher.forward(request, response);
 	}
 
@@ -46,72 +49,108 @@ public class AccountControllerServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// Get the form inputs
-		String firstName = request.getParameter("firstName");
-		String lastName = request.getParameter("lastName");
-		String username = request.getParameter("username");
+		// Get the email and password form inputs
+		String email = request.getParameter("email");
 		String password = request.getParameter("password");
-		String billingFullName = request.getParameter("billingFullName");
-		String billingAddressLine1 = request.getParameter("billingAddressLine1");
-		String billingAddressLine2 = request.getParameter("billingAddressLine2");
-		String billingCity = request.getParameter("billingCity");
-		String billingProvince = request.getParameter("billingProvince");
-		String billingCountry = request.getParameter("billingCountry");
-		String billingZip = request.getParameter("billingZip");
-		String billingPhone = request.getParameter("billingPhone");
-		String shippingFullName = request.getParameter("shippingFullName");
-		String shippingAddressLine1 = request.getParameter("shippingAddressLine1");
-		String shippingAddressLine2 = request.getParameter("shippingAddressLine2");
-		String shippingCity = request.getParameter("shippingCity");
-		String shippingProvince = request.getParameter("shippingProvince");
-		String shippingCountry = request.getParameter("shippingCountry");
-		String shippingZip = request.getParameter("shippingZip");
-		String shippingPhone = request.getParameter("shippingPhone");
+		String encodedPassword = Base64.getEncoder().encodeToString(password.getBytes());
 		
 		// Get the session
 		HttpSession session = request.getSession();
 		
-		// The input to post
-		String input = String.format("{\"addressList\": [{\"addressLine1\": \"%s\",\"addressLine2\":\"%s\","
-						+"\"city\": \"%s\",\"country\": \"%s\",\"customerId\": 0,\"fullName\": \"%s\","
-						+"\"id\": 0,\"phone\": \"%s\",\"province\": \"%s\",\"type\": \"BILLING\","
-						+ "\"zip\": \"%s\"},{\"addressLine1\": \"%s\",\"addressLine2\": \"%s\","
-						+ "\"city\": \"%s\",\"country\": \"%s\",\"customerId\": 0,"
-				      	+ "\"fullName\": \"%s\",\"id\": 0,\"phone\": \"%s\",\"province\": \"%s\","
-				      	+ "\"type\": \"SHIPPING\",\"zip\": \"%s\"}],\"customer\": {\"email\": \"%s\","
-				      	+ "\"firstName\": \"%s\",\"id\": 0,\"lastName\": \"%s\",\"password\": \"%s\"}}", billingAddressLine1, 
-				      	billingAddressLine2, billingCity, billingCountry, billingFullName, billingPhone, billingProvince, billingZip,
-				      	shippingAddressLine1, shippingAddressLine2, shippingCity, shippingCountry, shippingFullName, shippingPhone, shippingProvince,
-				      	shippingZip, username, firstName, lastName, password);
+		// Create JSON object for post
+		JsonObjectBuilder builder = Json.createObjectBuilder();
 		
-		// Load SSL key to perform handshake with the server
-		ServletContext sc = this.getServletContext();
-		String kpath = sc.getRealPath("/keystore.p12");
-		SslConfigurator sslConfig = SslConfigurator.newInstance()
-			.trustStoreFile(kpath)
-			.trustStorePassword("password");
-		SSLContext sslContext = sslConfig.createSSLContext();
+		// Add customer info to JSON
+		JsonObjectBuilder customerInfoBuilder = Json.createObjectBuilder();
+		customerInfoBuilder.add("firstName", request.getParameter("firstName"));
+		customerInfoBuilder.add("lastName", request.getParameter("lastName"));
+		customerInfoBuilder.add("email", email);
+		customerInfoBuilder.add("password", encodedPassword);
+		customerInfoBuilder.add("defaultBillingAddressId", -1);
+		customerInfoBuilder.add("defaultShippingAddressId", -1);
+		builder.add("customer", customerInfoBuilder);
+		
+		// Add addresses to JSON
+		JsonObjectBuilder addressBuilder = Json.createObjectBuilder();
+		builder.add("defaultAddressInfo", addressBuilder);
+		
+		// Add billing address to JSON
+		JsonObjectBuilder billingAddressBuilder = Json.createObjectBuilder();
+		billingAddressBuilder.add("fullName", request.getParameter("billingFullName"));
+		billingAddressBuilder.add("addressLine1", request.getParameter("billingAddressLine1"));
+		billingAddressBuilder.add("addressLine2", request.getParameter("billingAddressLine2"));
+		billingAddressBuilder.add("city", request.getParameter("billingCity"));
+		billingAddressBuilder.add("province", request.getParameter("billingProvince"));
+		billingAddressBuilder.add("country", request.getParameter("billingCountry"));
+		billingAddressBuilder.add("zip", request.getParameter("billingZip"));
+		billingAddressBuilder.add("phone", request.getParameter("billingPhone"));
+		billingAddressBuilder.add("type", "BILLING");
+		billingAddressBuilder.add("id", -1);
+		addressBuilder.add("billingAddress", billingAddressBuilder);
+		addressBuilder.add("defaultAddressInfo", billingAddressBuilder);
+		
+		// Add shipping address to JSON
+		JsonObjectBuilder shippingAddressBuilder = Json.createObjectBuilder();
+		shippingAddressBuilder.add("fullName", request.getParameter("shippingFullName"));
+		shippingAddressBuilder.add("addressLine1", request.getParameter("shippingAddressLine1"));
+		shippingAddressBuilder.add("addressLine2", request.getParameter("shippingAddressLine2"));
+		shippingAddressBuilder.add("city", request.getParameter("shippingCity"));
+		shippingAddressBuilder.add("province", request.getParameter("shippingProvince"));
+		shippingAddressBuilder.add("country", request.getParameter("shippingCountry"));
+		shippingAddressBuilder.add("zip", request.getParameter("shippingZip"));
+		shippingAddressBuilder.add("phone", request.getParameter("shippingPhone"));
+		shippingAddressBuilder.add("type", "SHIPPING");
+		shippingAddressBuilder.add("id", -1);
+		addressBuilder.add("shippingAddress", shippingAddressBuilder);
+		
+		// Build JSON object for the post
+		JsonObject jsonObject = builder.build();
 		
 		// Create the API client and invoke the request
-		Client client = ClientBuilder.newBuilder().sslContext(sslContext).build();
+		ServletContext sc = this.getServletContext();
+		Client client = ClientBuilder.newBuilder().sslContext(Handshake.getSslContext(sc)).build();
 		Response resp = client.target("https://localhost:8444/api/account/create")
         	.request(MediaType.APPLICATION_JSON)
-            .post(Entity.json(input));
-		
-		// Test
-		System.out.println(input);
-		System.out.println(resp);
+        	.accept(MediaType.APPLICATION_JSON)
+            .post(Entity.json(jsonObject));
 		
 		// Check the response
+		System.out.println(resp);
         int code = resp.getStatus();
         System.out.println(code);
         
+        // Login if the code is 200/201, otherwise send the error message to the client
         if (code == 200 || code == 201) { 
-        	session.setAttribute("session.username", username);
+        	session.setAttribute("message", "Account created successfully.");
+        	session.setAttribute("username", email);
+        	session.setAttribute("password", encodedPassword);
+        	// Check if the sign up request came from an order checkout attempt and redirect accordingly
+        	String checkout = (String) session.getAttribute("checkout");
+        	if (checkout != null && checkout.equals("true")) {
+        		session.removeAttribute("checkout");
+        		response.sendRedirect(request.getContextPath() + "/order");
+        	} else {
+        		response.sendRedirect(request.getContextPath() + "/store");
+        	}
+        } else if (code == 400) {
+        	String message = resp.readEntity(JsonObject.class).getString("message");
+        	session.setAttribute("message", message);
+        	response.sendRedirect(request.getContextPath() + "/account");
+        } else if (code == 401) {
+        	session.setAttribute("message", "Unauthorized.");
+        	response.sendRedirect(request.getContextPath() + "/account");
+        } else if (code == 403) {
+        	session.setAttribute("message", "Forbidden.");
+        	response.sendRedirect(request.getContextPath() + "/account");
+        } else if (code == 404) {
+        	session.setAttribute("message", "Not found.");
+        	response.sendRedirect(request.getContextPath() + "/account");
+        } else if (code == 500) {
+        	session.setAttribute("message", "Database or server error occurred.");
+        	response.sendRedirect(request.getContextPath() + "/account");
         } else {
-        	session.setAttribute("message", "Action failed.");
-        	RequestDispatcher dispatcher = this.getServletContext().getRequestDispatcher("/WEB-INF/jsp/account.jsp");  
-    	    dispatcher.forward(request, response);
+        	session.setAttribute("message", "Something went wrong.");
+        	response.sendRedirect(request.getContextPath() + "/account");
         }
 	}
 

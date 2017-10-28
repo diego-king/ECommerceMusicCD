@@ -1,21 +1,20 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix='c' uri='http://java.sun.com/jsp/jstl/core' %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<link rel="stylesheet" href="css/bootstrap.min.css">
-	<link rel="stylesheet" href="css/parsley.css">	
-	<link rel="stylesheet" href="css/main.css">
-	<script src="js/jquery-3.2.1.min.js"></script>
-	<script src="js/bootstrap.min.js"></script>
-	<script src="js/parsley.min.js"></script>
-	<script src="js/account.js"></script>
-	<title>Create Account</title>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<link rel="stylesheet" href="/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+<link rel="stylesheet" href="/css/parsley.css">
+<title>Create Account</title>
 </head>
 <body>
-	<!--  include navigation  -->
-  <%@ include file="../../template/navbar.jsp" %>
-  <%@ include file="../../template/messages.jsp" %>
+	<c:if test="${sessionScope.message != null}">
+		<p class="alert alert-info" role="alert">
+			<c:out value="${sessionScope.message}" />
+			<c:remove var="message" scope="session" />
+		</p>
+	</c:if>
   <div class="container w-50">
     <form method="POST" action="account" data-parsley-validate>
     	<h2>Create a new account</h2>
@@ -30,8 +29,8 @@
 		    </div>
 			</div>
 	    <div class="form-group">
-	      <label for="email" class="col-form-label">Email *</label>
-	      <input type="email" class="form-control" id="email"  name="email" data-parsley-trigger="change" required>
+	      <label for="username" class="col-form-label">Username (email) *</label>
+	      <input type="email" class="form-control" id="username"  name="username" data-parsley-trigger="change" required>
 	    </div>
 			<div class="form-row">
 		    <div class="form-group col-md-6">
@@ -55,8 +54,8 @@
 	      <input type="text" class="form-control" id="billingAddressLine1" name="billingAddressLine1" data-parsley-trigger="change" required>
 			</div>
 	    <div class="form-group">
-	      <label for="billingAddressLine2" class="col-form-label">Address 2</label>
-	      <input type="text" class="form-control" id="billingAddressLine2" name="billingAddressLine2" data-parsley-trigger="change">
+	      <label for="billingAddressLine2" class="col-form-label">Address 2 *</label>
+	      <input type="text" class="form-control" id="billingAddressLine2" name="billingAddressLine2" data-parsley-trigger="change" required>
       </div>
       <div class="form-row">
 	      <div class="form-group col-md-6">
@@ -99,8 +98,8 @@
 	      <input type="text" class="form-control" id="shippingAddressLine1" name="shippingAddressLine1" data-parsley-trigger="change" required>
 			</div>
 	    <div class="form-group">
-	      <label for="shippingAddressLine2" class="col-form-label">Address 2</label>
-	      <input type="text" class="form-control" id="shippingAddressLine2" name="shippingAddressLine2" data-parsley-trigger="change">
+	      <label for="shippingAddressLine2" class="col-form-label">Address 2 *</label>
+	      <input type="text" class="form-control" id="shippingAddressLine2" name="shippingAddressLine2" data-parsley-trigger="change" required>
       </div>
       <div class="form-row">
 	      <div class="form-group col-md-6">
@@ -129,7 +128,25 @@
 		  <button type="submit" class="btn btn-primary">Submit</button>
 		 </form>
 		 <br>
-		 <p>Already signed up? <a href="login">Log in here</a>.
+		 <p>Already signed up? <a href="<%= request.getContextPath() %>/login">Log in here</a>.
   </div>
+  <script src="/js/jquery-3.2.1.min.js"></script>
+  <script src="/js/bootstrap.min.js"></script>
+  <script src="/js/parsley.min.js"></script>
+  <script>
+    // Copy billing information to shipping information
+    $("#sameAsBilling").on("change", function(){
+	  if (this.checked) {
+		  $("[id='shippingFullName']").val($("[id='billingFullName']").val());
+	    $("[id='shippingAddressLine1']").val($("[id='billingAddressLine1']").val());
+	    $("[id='shippingAddressLine2']").val($("[id='billingAddressLine2']").val());
+	    $("[id='shippingCity']").val($("[id='billingCity']").val());
+	    $("[id='shippingProvince']").val($("[id='billingProvince']").val());
+	    $("[id='shippingCountry']").val($("[id='billingCountry']").val());
+	    $("[id='shippingZip']").val($("[id='billingZip']").val());
+	    $("[id='shippingPhone']").val($("[id='billingPhone']").val());
+	  }
+    });
+  </script>
 </body>
 </html>
