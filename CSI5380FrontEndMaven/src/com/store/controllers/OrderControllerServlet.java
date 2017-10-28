@@ -22,8 +22,8 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
 import com.store.utils.Handshake;
+import com.store.model.*;
 
 /**
  * Servlet implementation class OrderControllerServlet
@@ -59,6 +59,11 @@ public class OrderControllerServlet extends HttpServlet {
         	.accept(MediaType.APPLICATION_JSON)
             .get();
 		
+		// Read the responses
+        int accountStatus = accountResponse.getStatus();
+        Account account = (Account) accountResponse.readEntity(Account.class);
+        accountResponse.close();
+        
 		// Invoke the request for the shipping options
 		Response shippingResponse =
             client.target("https://localhost:8444/api/order/shipping")
@@ -66,17 +71,17 @@ public class OrderControllerServlet extends HttpServlet {
             .accept(MediaType.APPLICATION_JSON)
             .get();
 		
-		// Read the responses
-        int accountStatus = accountResponse.getStatus();
+
         int shippingStatus = shippingResponse.getStatus();
-        JsonObject account = accountResponse.readEntity(JsonObject.class);
-		List<JsonArray> shippingList = shippingResponse.readEntity(new GenericType<List<JsonArray>>(){});
-        
+		List<ShippingInfo> shippingList = shippingResponse.readEntity(new GenericType<List<ShippingInfo>>(){});
+		shippingResponse.close();
+		
         // Get customer info
-        JsonObject customer = account.getJsonObject("customer");
-        request.setAttribute("email", customer.getString("email"));
-        request.setAttribute("firstName", customer.getString("firstName"));
-        request.setAttribute("lastName", customer.getString("lastName"));
+	
+        Customer customer = account.getCustomer();
+        request.setAttribute("email", customer.getEmail());
+        request.setAttribute("firstName", customer.getFirstName());
+        request.setAttribute("lastName", customer.getLastName());
         
         // Get shipping options
         request.setAttribute("shippingOptions", shippingList);
@@ -102,7 +107,7 @@ public class OrderControllerServlet extends HttpServlet {
 		
         // Continue with the request if status codes are 200, otherwise send an error message to the client
         if (accountStatus == 200 && shippingStatus == 200) {
-        	RequestDispatcher dispatcher = this.getServletContext().getRequestDispatcher("/WEB-INF/order.jsp");  
+        	RequestDispatcher dispatcher = this.getServletContext().getRequestDispatcher("/WEB-INF/jsp/order.jsp");  
     	    dispatcher.forward(request, response);
         } else if (accountStatus == 401 || shippingStatus == 401) {
         	session.setAttribute("message", "Unauthorized.");
@@ -132,6 +137,7 @@ public class OrderControllerServlet extends HttpServlet {
 		
 		// Create JSON object for post
 		JsonObjectBuilder builder = Json.createObjectBuilder();
+		builder.add("customerEmail",  request.getParameter("email"));
 		
 		// Add PO items to JSON
 		JsonArrayBuilder itemsListBuilder = Json.createArrayBuilder();
@@ -149,10 +155,9 @@ public class OrderControllerServlet extends HttpServlet {
 		}
 		builder.add("poItems", itemsListBuilder);
 		builder.add("shippingInfoId", request.getParameter("ship"));
-		builder.add("customerEmail",  request.getParameter("email"));
-		
+
 		// Build JSON object for the post
-		JsonObject jsonObject = builder.build();
+		String input = builder.build().toString();
 		
 		// Create the API client and invoke the request
 		ServletContext sc = this.getServletContext();
@@ -160,7 +165,7 @@ public class OrderControllerServlet extends HttpServlet {
 		Response resp = client.target("https://localhost:8444/api/order/create")
         	.request(MediaType.APPLICATION_JSON)
         	.accept(MediaType.APPLICATION_JSON)
-            .post(Entity.json(jsonObject));
+            .post(Entity.json(input));
 		
 		// Check the response
         int code = resp.getStatus();

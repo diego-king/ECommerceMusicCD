@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Base64;
 
 import javax.json.Json;
+import javax.json.JsonBuilderFactory;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.servlet.RequestDispatcher;
@@ -17,6 +18,7 @@ import javax.servlet.http.HttpSession;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -41,7 +43,7 @@ public class AccountControllerServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		RequestDispatcher dispatcher = this.getServletContext().getRequestDispatcher("/WEB-INF/account.jsp");  
+		RequestDispatcher dispatcher = this.getServletContext().getRequestDispatcher("/WEB-INF/jsp/account.jsp");  
 	    dispatcher.forward(request, response);
 	}
 
@@ -53,29 +55,30 @@ public class AccountControllerServlet extends HttpServlet {
 		String email = request.getParameter("email");
 		String password = request.getParameter("password");
 		String encodedPassword = Base64.getEncoder().encodeToString(password.getBytes());
-		
+		String firstName = request.getParameter("firstName");
+		String lastName = request.getParameter("lastName");
 		// Get the session
 		HttpSession session = request.getSession();
 		
 		// Create JSON object for post
-		JsonObjectBuilder builder = Json.createObjectBuilder();
+		JsonBuilderFactory jsonFactory = Json.createBuilderFactory(null);
+		JsonObjectBuilder requestBuilder = Json.createObjectBuilder();
 		
 		// Add customer info to JSON
-		JsonObjectBuilder customerInfoBuilder = Json.createObjectBuilder();
-		customerInfoBuilder.add("firstName", request.getParameter("firstName"));
-		customerInfoBuilder.add("lastName", request.getParameter("lastName"));
+		JsonObjectBuilder customerInfoBuilder = jsonFactory.createObjectBuilder();
+		customerInfoBuilder.add("firstName", firstName);
+		customerInfoBuilder.add("lastName", lastName);
 		customerInfoBuilder.add("email", email);
 		customerInfoBuilder.add("password", encodedPassword);
-		customerInfoBuilder.add("defaultBillingAddressId", -1);
-		customerInfoBuilder.add("defaultShippingAddressId", -1);
-		builder.add("customer", customerInfoBuilder);
+		customerInfoBuilder.add("id", 0);
+		customerInfoBuilder.add("defaultShippingAddressId", 0);
+		customerInfoBuilder.add("defaultBillingAddressId", 0);
+		requestBuilder.add("customer", customerInfoBuilder);
 		
-		// Add addresses to JSON
-		JsonObjectBuilder addressBuilder = Json.createObjectBuilder();
-		builder.add("defaultAddressInfo", addressBuilder);
-		
+		// Add default addresses Info to JSON
+		JsonObjectBuilder addressBuilder = jsonFactory.createObjectBuilder();		
 		// Add billing address to JSON
-		JsonObjectBuilder billingAddressBuilder = Json.createObjectBuilder();
+		JsonObjectBuilder billingAddressBuilder = jsonFactory.createObjectBuilder();
 		billingAddressBuilder.add("fullName", request.getParameter("billingFullName"));
 		billingAddressBuilder.add("addressLine1", request.getParameter("billingAddressLine1"));
 		billingAddressBuilder.add("addressLine2", request.getParameter("billingAddressLine2"));
@@ -85,12 +88,10 @@ public class AccountControllerServlet extends HttpServlet {
 		billingAddressBuilder.add("zip", request.getParameter("billingZip"));
 		billingAddressBuilder.add("phone", request.getParameter("billingPhone"));
 		billingAddressBuilder.add("type", "BILLING");
-		billingAddressBuilder.add("id", -1);
-		addressBuilder.add("billingAddress", billingAddressBuilder);
-		addressBuilder.add("defaultAddressInfo", billingAddressBuilder);
-		
+		//billingAddressBuilder.add("id", -1);
+
 		// Add shipping address to JSON
-		JsonObjectBuilder shippingAddressBuilder = Json.createObjectBuilder();
+		JsonObjectBuilder shippingAddressBuilder = jsonFactory.createObjectBuilder();
 		shippingAddressBuilder.add("fullName", request.getParameter("shippingFullName"));
 		shippingAddressBuilder.add("addressLine1", request.getParameter("shippingAddressLine1"));
 		shippingAddressBuilder.add("addressLine2", request.getParameter("shippingAddressLine2"));
@@ -100,19 +101,20 @@ public class AccountControllerServlet extends HttpServlet {
 		shippingAddressBuilder.add("zip", request.getParameter("shippingZip"));
 		shippingAddressBuilder.add("phone", request.getParameter("shippingPhone"));
 		shippingAddressBuilder.add("type", "SHIPPING");
-		shippingAddressBuilder.add("id", -1);
+		//shippingAddressBuilder.add("id", -1);
+		
 		addressBuilder.add("shippingAddress", shippingAddressBuilder);
+		addressBuilder.add("billingAddress", billingAddressBuilder);
+		requestBuilder.add("defaultAddressInfo", addressBuilder);
 		
 		// Build JSON object for the post
-		JsonObject jsonObject = builder.build();
+		String input = requestBuilder.build().toString();
 		
 		// Create the API client and invoke the request
 		ServletContext sc = this.getServletContext();
 		Client client = ClientBuilder.newBuilder().sslContext(Handshake.getSslContext(sc)).build();
-		Response resp = client.target("https://localhost:8444/api/account/create")
-        	.request(MediaType.APPLICATION_JSON)
-        	.accept(MediaType.APPLICATION_JSON)
-            .post(Entity.json(jsonObject));
+		WebTarget webtarget = client.target("https://localhost:8444/api/account/create");
+		Response resp = webtarget.request(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).post(Entity.json(input));
 		
 		// Check the response
 		System.out.println(resp);

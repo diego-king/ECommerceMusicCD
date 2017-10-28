@@ -18,6 +18,9 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.store.model.Account;
+import com.store.model.Address;
+import com.store.model.Customer;
 import com.store.utils.Handshake;
 
 /**
@@ -56,35 +59,36 @@ public class PaymentControllerServlet extends HttpServlet {
 		
 		// Read the responses
         int accountStatus = accountResponse.getStatus();
-        JsonObject account = accountResponse.readEntity(JsonObject.class);
+        Account account = accountResponse.readEntity(Account.class);
+        accountResponse.close();
         
         // Get customer info
-        JsonObject customer = account.getJsonObject("customer");
-        request.setAttribute("email", customer.getString("email"));
-        request.setAttribute("firstName", customer.getString("firstName"));
-        request.setAttribute("lastName", customer.getString("lastName"));
+        Customer customer = account.getCustomer();
+        request.setAttribute("email", customer.getEmail());
+        request.setAttribute("firstName", customer.getFirstName());
+        request.setAttribute("lastName", customer.getLastName());
 	    
 	    // Get billing info
-	    JsonObject billingAddress = account.getJsonObject("defaultAddressInfo").getJsonObject("billingAddress");
-        request.setAttribute("billingFullName", billingAddress.getString("fullName"));
-        request.setAttribute("billingAddressLine1", billingAddress.getString("addressLine1"));
-        request.setAttribute("billingAddressLine2", billingAddress.getString("addressLine2"));
-        request.setAttribute("billingCity", billingAddress.getString("city"));
-        request.setAttribute("billingProvince", billingAddress.getString("province"));
-        request.setAttribute("billingCountry", billingAddress.getString("country"));
-        request.setAttribute("billingZip", billingAddress.getString("zip"));
-        request.setAttribute("billingPhone", billingAddress.getString("phone"));
+        Address billingAddress = account.getDefaultAddressInfo().getBillingAddress();
+        request.setAttribute("billingFullName", billingAddress.getFullName());
+        request.setAttribute("billingAddressLine1", billingAddress.getAddressLine1());
+        request.setAttribute("billingAddressLine2", billingAddress.getAddressLine2());
+        request.setAttribute("billingCity", billingAddress.getCity());
+        request.setAttribute("billingProvince", billingAddress.getProvince());
+        request.setAttribute("billingCountry", billingAddress.getCountry());
+        request.setAttribute("billingZip", billingAddress.getZip());
+        request.setAttribute("billingPhone", billingAddress.getPhone());
         
         // Get shipping info
-	    JsonObject shippingAddress = account.getJsonObject("defaultAddressInfo").getJsonObject("shippingAddress");	
-		request.setAttribute("shippingFullName", shippingAddress.getString("fullName"));
-        request.setAttribute("shippingAddressLine1", shippingAddress.getString("addressLine1"));
-        request.setAttribute("shippingAddressLine2", shippingAddress.getString("addressLine2"));
-        request.setAttribute("shippingCity", shippingAddress.getString("city"));
-        request.setAttribute("shippingProvince", shippingAddress.getString("province"));
-        request.setAttribute("shippingCountry", shippingAddress.getString("country"));
-        request.setAttribute("shippingZip", shippingAddress.getString("zip"));
-        request.setAttribute("shippingPhone", shippingAddress.getString("phone"));
+        Address shippingAddress = account.getDefaultAddressInfo().getShippingAddress();	
+		request.setAttribute("shippingFullName", shippingAddress.getFullName());
+        request.setAttribute("shippingAddressLine1", shippingAddress.getAddressLine1());
+        request.setAttribute("shippingAddressLine2", shippingAddress.getAddressLine2());
+        request.setAttribute("shippingCity", shippingAddress.getCity());
+        request.setAttribute("shippingProvince", shippingAddress.getProvince());
+        request.setAttribute("shippingCountry", shippingAddress.getCountry());
+        request.setAttribute("shippingZip", shippingAddress.getZip());
+        request.setAttribute("shippingPhone", shippingAddress.getPhone());
 		
         // Continue with the request if status code is 200, otherwise send an error message to the client
         if (accountStatus == 200) {
@@ -93,7 +97,7 @@ public class PaymentControllerServlet extends HttpServlet {
 	        	session.setAttribute("message", "You must checkout a cart first.");
 	        	response.sendRedirect(request.getContextPath() + "/store");
 	        } else {
-	        	RequestDispatcher dispatcher = this.getServletContext().getRequestDispatcher("/WEB-INF/payment.jsp");  
+	        	RequestDispatcher dispatcher = this.getServletContext().getRequestDispatcher("/WEB-INF/jsp/payment.jsp");  
 	    	    dispatcher.forward(request, response);
 	        }
         } else if (accountStatus == 401) {
@@ -155,7 +159,7 @@ public class PaymentControllerServlet extends HttpServlet {
 		builder.add("shippingAddress", shippingAddressBuilder);
 		
 		// Build JSON object for the post
-		JsonObject jsonObject = builder.build();
+		String input = builder.build().toString();
 
 		// Create the API client and invoke the request
 		ServletContext sc = this.getServletContext();
@@ -164,7 +168,7 @@ public class PaymentControllerServlet extends HttpServlet {
 				.queryParam("card", request.getParameter("creditCard"))
 	        	.request(MediaType.APPLICATION_JSON)
 	        	.accept(MediaType.APPLICATION_JSON)
-	        	.post(Entity.json(jsonObject));
+	        	.post(Entity.json(input));
 		
 		// Check the response
         int code = resp.getStatus();
