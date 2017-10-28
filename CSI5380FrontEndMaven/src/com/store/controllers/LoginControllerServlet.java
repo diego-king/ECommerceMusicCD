@@ -1,9 +1,12 @@
 package com.store.controllers;
 
 import java.io.IOException;
+import java.io.StringReader;
 import java.util.Base64;
 
+import javax.json.Json;
 import javax.json.JsonObject;
+import javax.json.JsonReader;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -17,10 +20,6 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 import com.store.utils.Handshake;
 
@@ -87,15 +86,11 @@ public class LoginControllerServlet extends HttpServlet {
         		response.sendRedirect(request.getContextPath() + "/store");
         	}
         } else if (code == 400 || code == 404) {
-        	JSONParser parser = new JSONParser();
-        	String body = resp.readEntity(String.class);
-        	JSONObject json = null;
-			try {
-				json = (JSONObject) parser.parse(body);
-			} catch (ParseException e) {
-				e.printStackTrace();
-			}
-        	session.setAttribute("message", json.get("message").toString());
+        	String responseStr = resp.readEntity(String.class);
+        	StringReader stringReader = new StringReader(responseStr);
+        	JsonReader reader = Json.createReader(stringReader);
+        	String message = reader.readObject().getString("message");
+        	session.setAttribute("message", message);
         	response.sendRedirect(request.getContextPath() + "/login");
         } else if (code == 401) {
         	session.setAttribute("message", "Unauthorized.");
