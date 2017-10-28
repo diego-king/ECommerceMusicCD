@@ -80,9 +80,9 @@
 				  </div>
 			  </div>
 				<br>
-				<div class="float-right">
-					<a class="btn btn-secondary btn-lg" href="store">Cancel</a>
-	   			<button type="submit" class="btn btn-primary btn-lg">Submit</button>
+				<div class="mb-5">
+					<a class="btn btn-secondary" href="store">Cancel</a>
+	   			<button type="submit" class="btn btn-primary">Submit</button>
 				</div>
 			</form>
    	</div>
