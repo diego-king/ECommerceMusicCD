@@ -52,6 +52,7 @@
     	<artifactId>resteasy-client</artifactId>
     	<version>3.0.2.Final</version>
 	</dependency>
+<<<<<<< HEAD
 	<dependency>
     <groupId>javax.servlet</groupId>
     <artifactId>javax.servlet-api</artifactId>
@@ -68,5 +69,13 @@
     <artifactId>jersey-common</artifactId>
     <version>2.26</version>
   </dependency>
+||||||| merged common ancestors
+=======
+	<dependency>
+		<groupId>javax.servlet</groupId>
+		<artifactId>javax.servlet-api</artifactId>
+		<version>3.1.0</version>
+	</dependency>
+>>>>>>> f3d66a00e118157ab5506c280252868c8bf7ae0c
   </dependencies>
 </project>
