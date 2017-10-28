@@ -135,7 +135,7 @@ public class AccountControllerServlet extends HttpServlet {
         		response.sendRedirect(request.getContextPath() + "/store");
         	}
         } else if (code == 400) {
-        	String message = resp.readEntity(JsonObject.class).getString("message");
+        	String message = resp.readEntity(String.class);
         	session.setAttribute("message", message);
         	response.sendRedirect(request.getContextPath() + "/account");
         } else if (code == 401) {

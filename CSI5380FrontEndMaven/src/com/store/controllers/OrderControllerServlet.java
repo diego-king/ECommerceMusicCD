@@ -178,7 +178,7 @@ public class OrderControllerServlet extends HttpServlet {
         	session.setAttribute("poId", poId);
         	response.sendRedirect(request.getContextPath() + "/payment");
         } else if (code == 400) {
-        	String message = resp.readEntity(JsonObject.class).getString("message");
+        	String message = resp.readEntity(String.class);
         	session.setAttribute("message", message);
         	response.sendRedirect(request.getContextPath() + "/order");
         } else if (code == 401) {

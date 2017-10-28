@@ -18,6 +18,10 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
 import com.store.utils.Handshake;
 
 /**
@@ -83,8 +87,15 @@ public class LoginControllerServlet extends HttpServlet {
         		response.sendRedirect(request.getContextPath() + "/store");
         	}
         } else if (code == 400 || code == 404) {
-        	String message = resp.readEntity(JsonObject.class).getString("message");
-        	session.setAttribute("message", message);
+        	JSONParser parser = new JSONParser();
+        	String body = resp.readEntity(String.class);
+        	JSONObject json = null;
+			try {
+				json = (JSONObject) parser.parse(body);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+        	session.setAttribute("message", json.get("message").toString());
         	response.sendRedirect(request.getContextPath() + "/login");
         } else if (code == 401) {
         	session.setAttribute("message", "Unauthorized.");
