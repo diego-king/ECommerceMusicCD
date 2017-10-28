@@ -12,8 +12,8 @@
     </head>
     <body style="padding-top: 5rem;">
         <!--  include navigation  -->
-        <%@ include file="../../template/nav.html" %>
-        
+        <%@ include file="../../template/navbar.jsp" %>
+        <%@ include file="../../template/messages.jsp" %>
         <!-- container begins -->
         <div class="container-fluid" style="padding: 3rem 1.5rem;">
             <div class="row">

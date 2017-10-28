@@ -11,20 +11,26 @@
     <div class="collapse navbar-collapse" id="navbarsExampleDefault">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item">
-                <a class="nav-link" href="#">CD Catalog</a>
+                <a class="nav-link" href="./">
+                    Home 
+                    <span class="sr-only">(current)</span>
+                </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Shopping Cart</a>
+                <a class="nav-link" href="./store">CD Category</a>
             </li>    
+            <li class="nav-item">
+                <a class="nav-link" href="./cart">Shopping Cart</a>
+            </li>   
         </ul>
         <form class="form-inline my-2 my-lg-0">
         		<c:choose>
 						    <c:when test="${sessionScope.username == null}">
-						        <a class="btn btn-dark" href="account">Sign up</a>
-	            			<a class="btn btn-dark" href="login">Login</a>
+						        <a class="btn btn-dark" href="./account">Sign up</a>
+	            			<a class="btn btn-dark" href="./login">Login</a>
 						    </c:when>    
 						    <c:otherwise>
-						    		<a class="btn btn-dark" href="logout">Logout</a>
+						    		<a class="btn btn-dark" href="./logout">Logout</a>
 						    </c:otherwise>
 						</c:choose>
         </form>

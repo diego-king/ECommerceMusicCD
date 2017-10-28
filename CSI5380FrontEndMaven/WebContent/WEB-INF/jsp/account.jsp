@@ -12,7 +12,7 @@
 	<script src="js/account.js"></script>
 	<title>Create Account</title>
 </head>
-<body>
+<body style="padding-top: 5rem;">
 	<!--  include navigation  -->
   <%@ include file="../../template/navbar.jsp" %>
   <%@ include file="../../template/messages.jsp" %>

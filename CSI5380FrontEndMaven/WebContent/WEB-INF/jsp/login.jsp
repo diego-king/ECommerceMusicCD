@@ -11,7 +11,7 @@
 	<script src="js/parsley.min.js"></script>
 	<title>Login</title>
 </head>
-<body>
+<body style="padding-top: 5rem;">
 	<!--  include navigation  -->
   <%@ include file="../../template/navbar.jsp" %>
   <%@ include file="../../template/messages.jsp" %>  
