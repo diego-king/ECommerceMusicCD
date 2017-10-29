@@ -3,9 +3,12 @@ package ca.edu.uottawa.csi5380.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
- * Object to represent an Address of type shipping
- * or billing and it's corresponding information.
- *
+ * Represents an Address of type shipping or billing and
+ * it's corresponding information.
+ * <p>
+ * This class directly maps to the Address table in the
+ * database.
+ * </p>
  * @author Kenny Byrd
  */
 public class Address {

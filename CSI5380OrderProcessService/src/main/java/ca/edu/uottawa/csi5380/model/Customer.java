@@ -1,14 +1,18 @@
 package ca.edu.uottawa.csi5380.model;
 
 /**
- * Represents a Customer of the CD Store. This contains
- * basic information about the customer to identify them
- * for accessing their account.
+ * Represents a Customer of the CD Store.
+ * <p>
+ * It contains basic information about the customer in order to identify
+ * them and for accessing their account.
+ * </p>
+ * This class maps directly to the Customer table in the database.
  *
  * @author Kenny Byrd
  */
 public class Customer {
 
+    // Member variables
     private long id;
     private String firstName;
     private String lastName;
@@ -17,6 +21,7 @@ public class Customer {
     private long defaultShippingAddressId; // Do not need when creating new account
     private long defaultBillingAddressId; // Do not need when creating new account
 
+    // Default constructor
     public Customer() {
         this.id = -1;
         this.firstName = "";
@@ -44,6 +49,7 @@ public class Customer {
         this.defaultBillingAddressId = defaultBillingAddressId;
     }
 
+    // Getters & Setters
     public long getId() {
         return id;
     }

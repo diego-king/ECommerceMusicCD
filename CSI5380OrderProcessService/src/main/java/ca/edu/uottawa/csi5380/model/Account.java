@@ -1,8 +1,8 @@
 package ca.edu.uottawa.csi5380.model;
 
 /**
- * Holds Customer information, including their
- * default Billing and Shipping address information.
+ * Holds Customer information, as well as additional shipping
+ * information including their default Billing and Shipping address.
  *
  * @author Kenny Byrd
  */

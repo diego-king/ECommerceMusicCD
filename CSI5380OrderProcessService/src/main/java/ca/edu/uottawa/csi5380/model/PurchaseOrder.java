@@ -8,6 +8,18 @@ import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * Represents a purchase order, mapping directly to the PO table
+ * in the database.
+ * <p>
+ * This class holds information about the Customer who
+ * ordered the specific order, the shipping and billing address
+ * the Customer has used for this specific order, the subtotal,
+ * grand total, tax amount, shipping amount, date the order was created,
+ * and the current status of the order.
+ * </p>
+ * @author Kenny Byrd
+ */
 public class PurchaseOrder {
 
     private long id;

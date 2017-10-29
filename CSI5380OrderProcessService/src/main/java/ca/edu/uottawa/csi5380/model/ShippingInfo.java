@@ -2,12 +2,26 @@ package ca.edu.uottawa.csi5380.model;
 
 import java.math.BigDecimal;
 
+/**
+ * Represents shipping information for a given
+ * shipping method for the CD store.
+ * <p>
+ * It holds information about what the shipping company is:
+ * (Canada Post, FedEx, UPS, Purolator, etc.), and the type of
+ * shipping (regular, express, one-day), as well as the amount
+ * of the shipping price.
+ * <p>
+ * This class maps directly to the ShippingInfo table in
+ * the database.
+ *
+ * @author Kenny Byrd
+ */
 public class ShippingInfo {
 
-    private final long id;
-    private final String company;
-    private final String type;
-    private final BigDecimal price;
+    private long id;
+    private String company;
+    private String type;
+    private BigDecimal price;
 
     public ShippingInfo() {
         this.id = 1;
@@ -23,20 +37,37 @@ public class ShippingInfo {
         this.price = price;
     }
 
+    // Getters & setters
     public long getId() {
         return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getCompany() {
         return company;
     }
 
+    public void setCompany(String company) {
+        this.company = company;
+    }
+
     public String getType() {
         return type;
     }
 
+    public void setType(String type) {
+        this.type = type;
+    }
+
     public BigDecimal getPrice() {
         return price;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
     }
 
     @Override

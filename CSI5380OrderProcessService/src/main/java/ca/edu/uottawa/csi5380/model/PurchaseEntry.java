@@ -6,9 +6,9 @@ import java.util.List;
 /**
  * A Purchase Entry represents a new purchase that the Customer
  * has "checked" out from the Shopping Cart Page.
- *
+ * <p>
  * Note: Use this object to create the initial order.
- *
+ * </p>
  * @author Kenny Byrd
  */
 public class PurchaseEntry {

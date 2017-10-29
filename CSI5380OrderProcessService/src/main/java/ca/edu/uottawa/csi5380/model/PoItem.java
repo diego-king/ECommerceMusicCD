@@ -4,6 +4,17 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.math.BigDecimal;
 
+/**
+ * Represents an purchase order item.
+ * <p>
+ * This contains the information of
+ * a CD when it has been checked out from the Customer's shopping cart.
+ * </p>
+ * It holds the the number of CDs the Customer wishes to order, and the
+ * current unit price of the CD.
+ *
+ * @author Kenny Byrd
+ */
 public class PoItem {
 
     private long poId;
