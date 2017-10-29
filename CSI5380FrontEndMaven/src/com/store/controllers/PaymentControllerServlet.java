@@ -186,8 +186,8 @@ public class PaymentControllerServlet extends HttpServlet {
         	System.out.println(json);
         	if (json.equals("true")) {
         		session.setAttribute("message", "Order successfully completed.");
-        		session.removeAttribute("session.order");
-        		session.removeAttribute("poId");
+        		session.setAttribute("session.order", null);
+        		session.setAttribute("poId", null);
         		response.sendRedirect(request.getContextPath() + "/store");
         	} else {
         		session.setAttribute("message", "Credit card authorization failed.");
