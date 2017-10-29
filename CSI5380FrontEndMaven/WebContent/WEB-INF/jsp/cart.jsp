@@ -27,7 +27,7 @@
                     </div>
                     <div class="row">
                         <form class="col-sm-5">
-                            <a href="./order" class="btn btn-success" id="checkout">Checkout</a>
+                            <button type="button" class="btn btn-success" id="checkout">Checkout</button>
                             <a href="./store" class="btn btn-success" role="continue">Continue Shopping</a>
                         </form>
                     </div>

@@ -61,9 +61,9 @@ var prepareData = function() {
     var jsonData = [];
     for (var i = 0; i < $('form.item').length; i++) {
         var aItem = {};
-        aItem.productId = $('form#' + i).find('input[name=productId]').val();
+        aItem.cdId = $('form#' + i).find('input[name=productId]').val();
         aItem.unitPrice = $('form#' + i).find('span.price').text();
-        aItem.quantity = $('form#' + i).find('input[name=quantity]').val();
+        aItem.numOrdered = $('form#' + i).find('input[name=quantity]').val();
         jsonData.push(aItem);
     }
     console.log(jsonData);
@@ -79,7 +79,6 @@ $('button#checkout').click(function() {
 
     // jquery post begins
     $.post('/CSI5380FrontEnd/payOrder', postData, function(data) {
-        alert(data);
         window.location.replace(data);
     });
     // jquery post ends

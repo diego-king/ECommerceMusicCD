@@ -10,7 +10,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 /**
- * Servlet implementation class LogoutControllerServlet
+ * Controller servlet to handle ending sessions and logging users out
+ * 
+ * @author Mike Kreager
+ * @version 2017-10-28
+ *
  */
 @WebServlet("/logout")
 public class LogoutControllerServlet extends HttpServlet {
@@ -21,11 +25,10 @@ public class LogoutControllerServlet extends HttpServlet {
      */
     public LogoutControllerServlet() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * Log the user out and invalidate the session
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// Get the session and invalidate it

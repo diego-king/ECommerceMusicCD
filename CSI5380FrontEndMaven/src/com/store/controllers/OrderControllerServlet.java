@@ -4,9 +4,6 @@ import java.io.IOException;
 import java.util.List;
 
 import javax.json.Json;
-import javax.json.JsonArray;
-import javax.json.JsonArrayBuilder;
-import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
@@ -23,10 +20,17 @@ import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import com.store.utils.Handshake;
+import com.google.gson.Gson;
 import com.store.model.*;
 
+import com.store.utils.Paths;
+
 /**
- * Servlet implementation class OrderControllerServlet
+ * Controller servlet to handle processing of orders
+ * 
+ * @author Mike Kreager
+ * @version 2017-10-28
+ *
  */
 @WebServlet("/order")
 public class OrderControllerServlet extends HttpServlet {
@@ -37,13 +41,13 @@ public class OrderControllerServlet extends HttpServlet {
      */
     public OrderControllerServlet() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * Get the account info and shipping options, and forward the user to the order page
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
 		// Get the session
 		HttpSession session = request.getSession();
 		String username = (String) session.getAttribute("username");
@@ -52,63 +56,44 @@ public class OrderControllerServlet extends HttpServlet {
 		// Create the API client and invoke the request to get the account information
 		ServletContext sc = this.getServletContext();
 		Client client = ClientBuilder.newBuilder().sslContext(Handshake.getSslContext(sc)).build();
-		Response accountResponse = client.target("https://localhost:8444/api/account")
+		Response accountResponse = client.target(Paths.GET_ACCOUNT)
         	.queryParam("username", username)
         	.queryParam("password", encodedPassword)
         	.request(MediaType.TEXT_PLAIN_TYPE)
         	.accept(MediaType.APPLICATION_JSON)
             .get();
 		
-		// Read the responses
         int accountStatus = accountResponse.getStatus();
-        Account account = (Account) accountResponse.readEntity(Account.class);
         accountResponse.close();
         
 		// Invoke the request for the shipping options
 		Response shippingResponse =
-            client.target("https://localhost:8444/api/order/shipping")
+            client.target(Paths.GET_SHIPPING)
             .request()
             .accept(MediaType.APPLICATION_JSON)
             .get();
 		
-
         int shippingStatus = shippingResponse.getStatus();
 		List<ShippingInfo> shippingList = shippingResponse.readEntity(new GenericType<List<ShippingInfo>>(){});
 		shippingResponse.close();
 		
-        // Get customer info
-	
-        Customer customer = account.getCustomer();
-        request.setAttribute("email", customer.getEmail());
-        request.setAttribute("firstName", customer.getFirstName());
-        request.setAttribute("lastName", customer.getLastName());
-        
-        // Get shipping options
-        request.setAttribute("shippingOptions", shippingList);
-        
-        // Item list
-        JsonArray items = Json.createArrayBuilder()
-				        	     .add(Json.createObjectBuilder()
-			        	            .add("cdid", "cd001")
-			        	            .add("title", "16 Biggest Hits")
-				        	     	.add("artist", "Johnny Cash")
-				        	     	.add("quantity", 1)
-				        	     	.add("price", 15.99))
-			        	         .add(Json.createObjectBuilder()
-			        	        	.add("cdid", "cd002")
-					        	    .add("title", "Greatest Hits (& Some That Will Be)")
-						        	.add("artist", "Willie Nelson")
-						        	.add("quantity", 2)
-						        	.add("price", 17.99))
-			        	         .build();
-        
-        // Get item list
-        request.setAttribute("items", items);
+		// Get shipping options
+		request.setAttribute("shippingOptions", shippingList);
 		
+        // Get customer email
+		String email = (String) session.getAttribute("username");
+        request.setAttribute("email", email);
+               
         // Continue with the request if status codes are 200, otherwise send an error message to the client
         if (accountStatus == 200 && shippingStatus == 200) {
-        	RequestDispatcher dispatcher = this.getServletContext().getRequestDispatcher("/WEB-INF/jsp/order.jsp");  
-    	    dispatcher.forward(request, response);
+        	// Redirect the user if the cart was empty
+    		if (session.getAttribute("session.order") == null) {
+    			session.setAttribute("message", "Your cart is empty.");
+            	response.sendRedirect(request.getContextPath() + "/store");
+    		} else {
+    			RequestDispatcher dispatcher = this.getServletContext().getRequestDispatcher("/WEB-INF/jsp/order.jsp");
+    			dispatcher.forward(request, response);
+    		}
         } else if (accountStatus == 401 || shippingStatus == 401) {
         	session.setAttribute("message", "Unauthorized.");
         	response.sendRedirect(request.getContextPath() + "/store");
@@ -128,54 +113,41 @@ public class OrderControllerServlet extends HttpServlet {
 	}
 
 	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 * Pass the carts items, account id and shipping info to the order creation service
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		// Get the session
+		// Get the session and attributes
 		HttpSession session = request.getSession();
+		String email = (String) session.getAttribute("username");
+		String cart = (String) session.getAttribute("session.order");
+        request.setAttribute("email", email);
 		
-		// Create JSON object for post
+		// Build JSON object for post
 		JsonObjectBuilder builder = Json.createObjectBuilder();
-		builder.add("customerEmail",  request.getParameter("email"));
-		
-		// Add PO items to JSON
-		JsonArrayBuilder itemsListBuilder = Json.createArrayBuilder();
-		int numOfCD = request.getParameterValues("cdid").length;
-		for (int i = 0; i < numOfCD; i++) {
-			String cdid = request.getParameterValues("cdid")[i];
-			String quantity = request.getParameterValues("quantity")[i];
-			String price = request.getParameterValues("price")[i];
-			JsonObjectBuilder itemBuilder = Json.createObjectBuilder();
-			itemBuilder.add("cdId", cdid);
-			itemBuilder.add("numOrdered", quantity);
-			itemBuilder.add("poId", 0);
-			itemBuilder.add("unitPrice", price);
-			itemsListBuilder.add(itemBuilder);
-		}
-		builder.add("poItems", itemsListBuilder);
+		builder.add("customerEmail",  email);
 		builder.add("shippingInfoId", request.getParameter("ship"));
-
-		// Build JSON object for the post
-		String input = builder.build().toString();
+		String input = builder.build().toString() + '"' + "poItems" + '"' + ':' + cart + '}';
 		
 		// Create the API client and invoke the request
 		ServletContext sc = this.getServletContext();
 		Client client = ClientBuilder.newBuilder().sslContext(Handshake.getSslContext(sc)).build();
-		Response resp = client.target("https://localhost:8444/api/order/create")
+		Response resp = client.target(Paths.CREATE_ORDER)
         	.request(MediaType.APPLICATION_JSON)
         	.accept(MediaType.APPLICATION_JSON)
             .post(Entity.json(input));
 		
-		// Check the response
         int code = resp.getStatus();
         System.out.println(code);
         
         // If the response is 200/201, otherwise send the error message to the client
         if (code == 200 || code == 201) { 
-        	session.setAttribute("message", "Order created successfully.");
+        	Gson gson = new Gson();
         	String poId = resp.readEntity(String.class);
-        	session.setAttribute("poId", poId);
+        	String json = gson.fromJson(poId, String.class);
+        	session.setAttribute("poId", json);
+        	session.setAttribute("message", "Order number " + json + " created successfully.");
+        	session.removeAttribute("session.order");
         	response.sendRedirect(request.getContextPath() + "/payment");
         } else if (code == 400) {
         	String message = resp.readEntity(String.class);
@@ -197,5 +169,6 @@ public class OrderControllerServlet extends HttpServlet {
         	session.setAttribute("message", "Something went wrong.");
         	response.sendRedirect(request.getContextPath() + "/order");
         }
+        resp.close();
 	}
 }

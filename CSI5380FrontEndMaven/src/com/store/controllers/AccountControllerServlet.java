@@ -5,7 +5,6 @@ import java.util.Base64;
 
 import javax.json.Json;
 import javax.json.JsonBuilderFactory;
-import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
@@ -25,7 +24,11 @@ import javax.ws.rs.core.Response;
 import com.store.utils.Handshake;
 
 /**
- * Servlet implementation class AccountControllerServlet
+ * Controller servlet to handle creation of new user accounts
+ * 
+ * @author Mike Kreager
+ * @version 2017-10-28
+ *
  */
 @WebServlet("/account")
 public class AccountControllerServlet extends HttpServlet {
@@ -36,11 +39,10 @@ public class AccountControllerServlet extends HttpServlet {
      */
     public AccountControllerServlet() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * Respond to get requests with forward to the sign up page
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		RequestDispatcher dispatcher = this.getServletContext().getRequestDispatcher("/WEB-INF/jsp/account.jsp");  
@@ -48,15 +50,16 @@ public class AccountControllerServlet extends HttpServlet {
 	}
 
 	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 * Pass the new user info to the account creation service
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// Get the email and password form inputs
+		// Get the form inputs
 		String email = request.getParameter("email");
 		String password = request.getParameter("password");
 		String encodedPassword = Base64.getEncoder().encodeToString(password.getBytes());
 		String firstName = request.getParameter("firstName");
 		String lastName = request.getParameter("lastName");
+		
 		// Get the session
 		HttpSession session = request.getSession();
 		
@@ -76,7 +79,8 @@ public class AccountControllerServlet extends HttpServlet {
 		requestBuilder.add("customer", customerInfoBuilder);
 		
 		// Add default addresses Info to JSON
-		JsonObjectBuilder addressBuilder = jsonFactory.createObjectBuilder();		
+		JsonObjectBuilder addressBuilder = jsonFactory.createObjectBuilder();
+		
 		// Add billing address to JSON
 		JsonObjectBuilder billingAddressBuilder = jsonFactory.createObjectBuilder();
 		billingAddressBuilder.add("fullName", request.getParameter("billingFullName"));
@@ -154,6 +158,7 @@ public class AccountControllerServlet extends HttpServlet {
         	session.setAttribute("message", "Something went wrong.");
         	response.sendRedirect(request.getContextPath() + "/account");
         }
+        resp.close();
 	}
 
 }
