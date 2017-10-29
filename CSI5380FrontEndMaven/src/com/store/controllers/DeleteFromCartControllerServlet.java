@@ -46,10 +46,7 @@ public class DeleteFromCartControllerServlet extends HttpServlet{
 			session.removeAttribute(id + ".counter");
 			String cdList = (String) session.getAttribute("cdList");
 			if (cdList != null && cdList.contains(id)) {
-				System.out.println("has " + id);
-				System.out.println(cdList);
 				String newCdList = cdList.replaceAll(id, "");
-				System.out.println(newCdList);
 				// update cd list in session
 				session.setAttribute("cdList", newCdList);
 			}

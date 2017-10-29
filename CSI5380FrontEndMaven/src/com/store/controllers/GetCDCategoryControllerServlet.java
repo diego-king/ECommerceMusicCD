@@ -15,6 +15,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.glassfish.jersey.SslConfigurator;
 
+import com.store.utils.Handshake;
 import com.store.utils.Paths;
 
 /**
@@ -46,11 +47,7 @@ public class GetCDCategoryControllerServlet extends HttpServlet{
 		// refer to AccountControllerServlet
 		// load ssl configuration
 		ServletContext servletContext = this.getServletContext();
-		String keyPath = servletContext.getRealPath("/keystore.p12");
-		SslConfigurator sslConfigurator = SslConfigurator.newInstance()
-				.trustStoreFile(keyPath)
-				.trustStorePassword("password");
-		SSLContext sslContext = sslConfigurator.createSSLContext();
+		SSLContext sslContext = Handshake.getSslContext(servletContext);
 		
 		// create the api client and invoke the request
 		Client client = ClientBuilder.newBuilder().sslContext(sslContext).build();

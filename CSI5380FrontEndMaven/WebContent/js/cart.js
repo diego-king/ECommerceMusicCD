@@ -1,6 +1,3 @@
-
-
-
 // load data 
 var loadShoppingCart = function() {
     // jquery get begins
@@ -18,8 +15,6 @@ var loadShoppingCart = function() {
 }
 
 loadShoppingCart();
-
-
 
 // load template with jquery.loadTemplate
 var generateCart = function(inputData) {
@@ -75,17 +70,14 @@ var prepareData = function() {
 }
 
 // response to clicking on "Pay"
-$('button#checkout').click(function() {
+$('a#checkout').click(function() {
     // prepare data for post request
     var postData = {
         data: prepareData()
     };
 
     // jquery post begins
-    $.post('/CSI5380FrontEnd/payOrder', postData, function(data) {
-        alert(data);
-        window.location.replace(data);
-    });
+    $.post('/CSI5380FrontEnd/payOrder', postData);
     // jquery post ends
 });
 

@@ -40,16 +40,13 @@ public class PayOrderControllerServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		String postData = request.getParameter("data");
-		
+				
 		// step 1: get the session object
 		boolean create = true;
 		HttpSession session = request.getSession(create);
 		
 		// step 2: set the session data value
 		session.setAttribute("session.order", postData);
-		
-		// testing
-		System.out.println(postData);
 		
 		// step 3: redirect to account order?
 		String redirectURL = Paths.CHECKOUT;
