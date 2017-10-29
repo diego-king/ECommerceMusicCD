@@ -13,7 +13,6 @@ import javax.servlet.http.HttpSession;
 /**
  * Servlet implementation class for adding cd to the shopping cart
  * @author Yicong Li
- * @version 2017-10-25
  *
  */
 @WebServlet(description = "add one cd into the cart", urlPatterns = {"/addToCart"})

@@ -49,8 +49,12 @@ var generateCart = function(inputData) {
             });
 
             // response to clicking on "Delete"
-            $('button.btn-danger').click(function() {
+            $('button.btn-danger').click(function() {  
                 $(this).parent().parent().parent().remove();
+                var postData = {
+                    id : $(this).parent().parent().parent().find('input[name=productId]').val()
+                };
+                $.post('/CSI5380FrontEnd/deleteFromCart', postData);
             }); 
         }});
 }
