@@ -47,7 +47,7 @@ $(document).ready(function() {
             // jquery post begins
             $.post('/CSI5380FrontEnd/addToCart', postData, function() {
                 // a cd is added successfully
-                alert('You add a cd to the shopping cart');
+                alert('Your item has been successfully added to the shopping cart.');
             });
             // jquery post ends
         });

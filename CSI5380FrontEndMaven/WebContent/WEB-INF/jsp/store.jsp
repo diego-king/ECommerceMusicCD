@@ -44,16 +44,18 @@
                     </select>
                 </div>
                 <br>
-                <div class="row">
-                    <a href="./cart" class="btn btn-primary" role="button">
-                        Shopping Cart
-                        <i class="fa fa-shopping-cart" aria-hidden="true"></i>
-                    </a>
-                </div>
             </div>
             <!-- cd cover pictures and detail information -->
             <div class="row" id="cdArea" role="tablist" style="margin-bottom: 10%;">
             </div>
+            <div class="row">
+                    <a href="./cart" class="btn btn-primary" role="button">
+                        Shopping Cart
+                        <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+                    </a>
+            </div>
+            <br>
+            <br>
         </div>
         <!-- container ends -->
     </body>
