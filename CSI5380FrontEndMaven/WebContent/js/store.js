@@ -3,13 +3,16 @@ var loadCD = function(inputData) {
     var postData = {
         category: inputData
     };
+    // jquery post begins
     $.post('/CSI5380FrontEnd/getCDs', postData, function(data) {
         for (var i = 0; i < data.length; i++) {
             data[i].detailId = i;
             data[i].herf = '#' + data[i].detailId;
         }
+        // generate cds
         generateCDs(data);
     });
+    // jquery post ends
 };
 
 loadCD($('select[name=categories]').val());
@@ -24,6 +27,7 @@ var addCDToCart = function() {
         // jquery post begins
         $.post('/CSI5380FrontEnd/addToCart', postData, function(data) {
             // possible response to returning data
+            alert('You add a cd to the shopping cart');
         });
         // jquery post ends
     });
@@ -39,8 +43,6 @@ var generateCDs = function(inputData) {
             addCDToCart();
     }});    
 }
-
-//generateCDs(data);
 
 // response to the change of category selection
 $('select[name=categories]').change(function() {
