@@ -13,7 +13,19 @@ public class Cd {
     private final String label;
     private final CdCategory category;
     private final String imgUrl;
-
+    
+    public Cd() {
+        this.id = "";
+        this.title = "";
+        this.artist = "";
+        this.year = "";
+        this.description = "";
+        this.price = new BigDecimal(0.0);
+        this.label = "";
+        this.category = CdCategory.COUNTRY;
+        this.imgUrl = "";
+    }
+    
     public Cd(String id, String title, String artist, String year, String description,
               BigDecimal price, String label, CdCategory category, String imgUrl) {
         this.id = id;

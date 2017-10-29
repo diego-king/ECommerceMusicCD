@@ -182,6 +182,13 @@ public class PaymentControllerServlet extends HttpServlet {
 	        		session.setAttribute("message", "Order successfully completed.");
 	        		// Need to invalidate the cart session attributes at this point
 	        		session.removeAttribute("poId");
+	        		
+	        		String cdList = (String) session.getAttribute("cdList");
+	        		String[] cdListArray = cdList.split(" ");
+	        		for (String cdId : cdListArray) {
+	        			session.removeAttribute(cdId + ".counter");
+	        		}
+	        		session.removeAttribute("cdList");
 	        		response.sendRedirect(request.getContextPath() + "/store");
 	        	} else {
 	        		session.setAttribute("message", "Credit card authorization failed.");

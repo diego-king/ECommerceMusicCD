@@ -1,4 +1,4 @@
-package ca.edu.uottawa.csi5380.model;
+package com.store.model;
 
 import java.math.BigDecimal;
 
@@ -13,7 +13,7 @@ public class Cd {
     private final String label;
     private final CdCategory category;
     private final String imgUrl;
-
+    
     public Cd() {
         this.id = "";
         this.title = "";

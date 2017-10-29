@@ -23,6 +23,7 @@ import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import com.store.utils.Handshake;
+import com.store.utils.Paths;
 import com.store.model.*;
 
 /**
@@ -48,6 +49,19 @@ public class OrderControllerServlet extends HttpServlet {
 		HttpSession session = request.getSession();
 		String username = (String) session.getAttribute("username");
 		String encodedPassword = (String) session.getAttribute("password");
+		String[] cdListArray = new String[] {};
+		String cdList = (String) session.getAttribute("cdList");
+		
+		if (cdList != null) {
+			cdListArray = cdList.split(" ");
+		}
+		
+		if (cdListArray.length == 0) {
+        	session.setAttribute("message", "No item in shopping cart.");
+        	response.sendRedirect(request.getContextPath() + "/store");
+        	return;
+		}
+		
 		
 		// Create the API client and invoke the request to get the account information
 		ServletContext sc = this.getServletContext();
@@ -87,23 +101,23 @@ public class OrderControllerServlet extends HttpServlet {
         request.setAttribute("shippingOptions", shippingList);
         
         // Item list
-        JsonArray items = Json.createArrayBuilder()
-				        	     .add(Json.createObjectBuilder()
-			        	            .add("cdid", "cd001")
-			        	            .add("title", "16 Biggest Hits")
-				        	     	.add("artist", "Johnny Cash")
-				        	     	.add("quantity", 1)
-				        	     	.add("price", 15.99))
-			        	         .add(Json.createObjectBuilder()
-			        	        	.add("cdid", "cd002")
-					        	    .add("title", "Greatest Hits (& Some That Will Be)")
-						        	.add("artist", "Willie Nelson")
-						        	.add("quantity", 2)
-						        	.add("price", 17.99))
-			        	         .build();
+        JsonArrayBuilder itemsListBuilder = Json.createArrayBuilder();
+        for (String cdId : cdListArray) {
+        	JsonObjectBuilder tmpBuilder = Json.createObjectBuilder();
+        	tmpBuilder.add("cdid", cdId);
+        	Response resp = client.target(Paths.CD_INFO + cdId).request(MediaType.APPLICATION_JSON).get();
+        	Cd cd  = resp.readEntity(Cd.class);
+        	resp.close();
+        	tmpBuilder.add("title", cd.getTitle());
+        	tmpBuilder.add("artist", cd.getArtist());
+        	Integer quantity = (Integer) session.getAttribute(cdId + ".counter");
+        	tmpBuilder.add("quantity", quantity);
+        	tmpBuilder.add("price", cd.getPrice());
+        	itemsListBuilder.add(tmpBuilder);
+        }     
         
         // Get item list
-        request.setAttribute("items", items);
+        request.setAttribute("items", itemsListBuilder.build());
 		
         // Continue with the request if status codes are 200, otherwise send an error message to the client
         if (accountStatus == 200 && shippingStatus == 200) {
