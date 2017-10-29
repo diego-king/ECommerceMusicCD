@@ -2,7 +2,6 @@ package com.store.controllers;
 
 import java.io.IOException;
 import javax.json.Json;
-import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
@@ -22,9 +21,13 @@ import com.store.model.Account;
 import com.store.model.Address;
 import com.store.model.Customer;
 import com.store.utils.Handshake;
-
+import com.store.utils.Paths;
 /**
- * Servlet implementation class Payment
+ * Controller servlet to handle payment for orders
+ * 
+ * @author Mike Kreager
+ * @version 2017-10-28
+ *
  */
 @WebServlet("/payment")
 public class PaymentControllerServlet extends HttpServlet {
@@ -35,14 +38,13 @@ public class PaymentControllerServlet extends HttpServlet {
      */
     public PaymentControllerServlet() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * Get account and address info, and forward the user to the payment page
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// Get the session
+		// Get the session and attributes
 		HttpSession session = request.getSession();
 		String username = (String) session.getAttribute("username");
 		String encodedPassword = (String) session.getAttribute("password");
@@ -50,7 +52,7 @@ public class PaymentControllerServlet extends HttpServlet {
 		// Create the API client and invoke the request to get the account information
 		ServletContext sc = this.getServletContext();
 		Client client = ClientBuilder.newBuilder().sslContext(Handshake.getSslContext(sc)).build();
-		Response accountResponse = client.target("https://localhost:8444/api/account")
+		Response accountResponse = client.target(Paths.GET_ACCOUNT)
         	.queryParam("username", username)
         	.queryParam("password", encodedPassword)
         	.request(MediaType.TEXT_PLAIN_TYPE)
@@ -119,7 +121,7 @@ public class PaymentControllerServlet extends HttpServlet {
 	}
 
 	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 * Pass the account id, credit card number and address info to the order confirmation service
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
@@ -164,7 +166,7 @@ public class PaymentControllerServlet extends HttpServlet {
 		// Create the API client and invoke the request
 		ServletContext sc = this.getServletContext();
 		Client client = ClientBuilder.newBuilder().sslContext(Handshake.getSslContext(sc)).build();
-		Response resp = client.target("https://localhost:8444/api/order/confirm/" + poId)
+		Response resp = client.target(Paths.CONFIRM_ORDER + poId)
 				.queryParam("card", request.getParameter("creditCard"))
 	        	.request(MediaType.APPLICATION_JSON)
 	        	.accept(MediaType.APPLICATION_JSON)
@@ -213,7 +215,7 @@ public class PaymentControllerServlet extends HttpServlet {
 	        	session.setAttribute("message", "Something went wrong.");
 	        	response.sendRedirect(request.getContextPath() + "/payment");
 		}
-
+        resp.close();
 	}
 
 }

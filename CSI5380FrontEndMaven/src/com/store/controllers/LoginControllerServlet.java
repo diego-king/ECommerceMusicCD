@@ -5,7 +5,6 @@ import java.io.StringReader;
 import java.util.Base64;
 
 import javax.json.Json;
-import javax.json.JsonObject;
 import javax.json.JsonReader;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
@@ -22,9 +21,13 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import com.store.utils.Handshake;
-
+import com.store.utils.*;
 /**
- * Servlet implementation class RegisterControllerServlet
+ * Controller servlet to handle authentication to the services
+ * 
+ * @author Mike Kreager
+ * @version 2017-10-28
+ *
  */
 @WebServlet("/login")
 public class LoginControllerServlet extends HttpServlet {
@@ -35,11 +38,10 @@ public class LoginControllerServlet extends HttpServlet {
      */
     public LoginControllerServlet() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * Respond to get requests with forward to the login page
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		RequestDispatcher dispatcher = this.getServletContext().getRequestDispatcher("/WEB-INF/jsp/login.jsp");  
@@ -47,7 +49,7 @@ public class LoginControllerServlet extends HttpServlet {
 	}
 
 	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 * Check password/email combination with the Account service, and log the user in (create a session)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// Get the form inputs
@@ -61,7 +63,7 @@ public class LoginControllerServlet extends HttpServlet {
 		// Create the API client and invoke the request
 		ServletContext sc = this.getServletContext();
 		Client client = ClientBuilder.newBuilder().sslContext(Handshake.getSslContext(sc)).build();
-		Response resp = client.target("https://localhost:8444/api/account/login")
+		Response resp = client.target(Paths.LOGIN)
         	.queryParam("username", email)
         	.queryParam("password", encodedPassword)
         	.request(MediaType.TEXT_PLAIN_TYPE)
@@ -105,6 +107,7 @@ public class LoginControllerServlet extends HttpServlet {
         	session.setAttribute("message", "Something went wrong.");
         	response.sendRedirect(request.getContextPath() + "/login");
         }
+        resp.close();
 	}
 
 }

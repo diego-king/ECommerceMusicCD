@@ -1,6 +1,7 @@
 package com.store.controllers;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.json.Json;
@@ -26,8 +27,14 @@ import com.store.utils.Handshake;
 import com.store.utils.Paths;
 import com.store.model.*;
 
+import com.store.utils.Paths;
+
 /**
- * Servlet implementation class OrderControllerServlet
+ * Controller servlet to handle processing of orders
+ * 
+ * @author Mike Kreager
+ * @version 2017-10-28
+ *
  */
 @WebServlet("/order")
 public class OrderControllerServlet extends HttpServlet {
@@ -38,13 +45,13 @@ public class OrderControllerServlet extends HttpServlet {
      */
     public OrderControllerServlet() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
 		// Get the session
 		HttpSession session = request.getSession();
 		String username = (String) session.getAttribute("username");
@@ -112,7 +119,8 @@ public class OrderControllerServlet extends HttpServlet {
         	tmpBuilder.add("artist", cd.getArtist());
         	Integer quantity = (Integer) session.getAttribute(cdId + ".counter");
         	tmpBuilder.add("quantity", quantity);
-        	tmpBuilder.add("price", cd.getPrice());
+        	BigDecimal totalPrice = cd.getPrice().multiply(new BigDecimal(quantity));
+        	tmpBuilder.add("price", totalPrice);
         	itemsListBuilder.add(tmpBuilder);
         }     
         
@@ -176,7 +184,7 @@ public class OrderControllerServlet extends HttpServlet {
 		// Create the API client and invoke the request
 		ServletContext sc = this.getServletContext();
 		Client client = ClientBuilder.newBuilder().sslContext(Handshake.getSslContext(sc)).build();
-		Response resp = client.target("https://localhost:8444/api/order/create")
+		Response resp = client.target(Paths.CREATE_ORDER)
         	.request(MediaType.APPLICATION_JSON)
         	.accept(MediaType.APPLICATION_JSON)
             .post(Entity.json(input));
@@ -211,5 +219,6 @@ public class OrderControllerServlet extends HttpServlet {
         	session.setAttribute("message", "Something went wrong.");
         	response.sendRedirect(request.getContextPath() + "/order");
         }
+        resp.close();
 	}
 }
