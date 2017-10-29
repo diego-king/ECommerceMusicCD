@@ -9,3 +9,4 @@ Please make sure your environment contains the following:
 3.Tomcate 9
 
 
+Starting page: https://localhost:8443/CSI5380FrontEnd
