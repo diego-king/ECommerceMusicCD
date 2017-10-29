@@ -58,8 +58,8 @@ public class OrderControllerServlet extends HttpServlet {
 		String encodedPassword = (String) session.getAttribute("password");
 		String[] cdListArray = new String[] {};
 		String cdList = (String) session.getAttribute("cdList");
-		cdList = cdList.trim();
 		if (cdList != null) {
+			cdList = cdList.trim();
 			cdListArray = cdList.split(" ");
 		}
 		
