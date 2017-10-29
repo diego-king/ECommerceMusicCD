@@ -14,7 +14,7 @@
     <body>
         <!--  include navigation  -->
         <%@ include file="../../template/navbar.jsp" %>
-				<%@ include file="../../template/messages.jsp" %>
+		<%@ include file="../../template/messages.jsp" %>
 
         <div class="container">
             <div class="row">
