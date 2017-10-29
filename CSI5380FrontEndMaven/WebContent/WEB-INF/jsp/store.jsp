@@ -32,6 +32,7 @@
                         <option value="COUNTRY">Country</option>
                         <option value="ROCK">Rock</option>
                         <option value="POP">Pop</option>
+                        <option value="ALL">All</option>
                     </select>
                 </div>
                 <br>

@@ -48,12 +48,18 @@ public class GetCDCategoryControllerServlet extends HttpServlet{
 		// load ssl configuration
 		ServletContext servletContext = this.getServletContext();
 		SSLContext sslContext = Handshake.getSslContext(servletContext);
-		
+		String result = "";
 		// create the api client and invoke the request
 		Client client = ClientBuilder.newBuilder().sslContext(sslContext).build();
-		String result = client.target(Paths.CD_CATEGORY + category)
-				.request(MediaType.APPLICATION_JSON)
-				.get(String.class);
+		if (category.equals("ALL")) {
+			result = client.target(Paths.CD_CATEGORY)
+					.request(MediaType.APPLICATION_JSON)
+					.get(String.class);
+		} else {
+			result = client.target(Paths.CD_CATEGORY + category)
+					.request(MediaType.APPLICATION_JSON)
+					.get(String.class);
+		}
 				
 		response.setContentType("application/json");
 		response.setCharacterEncoding("UTF-8");
