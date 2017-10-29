@@ -17,7 +17,6 @@ import com.store.utils.Paths;
 /**
  * Servlet implementation class for forwarding payment to order servlet
  * @author Yicong Li
- * @version 2017-10-22
  *
  */
 @WebServlet(description = "Pay a order", urlPatterns = {"/payOrder"})
@@ -48,12 +47,6 @@ public class PayOrderControllerServlet extends HttpServlet {
 		// step 2: set the session data value
 		session.setAttribute("session.order", postData);
 		
-		// step 3: redirect to account order?
-		String redirectURL = Paths.CHECKOUT;
-
-		response.setContentType("text/plain");
-		response.setCharacterEncoding("UTF-8");
-		response.getWriter().write(redirectURL);
 	}
 
 }

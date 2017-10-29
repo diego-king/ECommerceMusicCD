@@ -22,7 +22,6 @@ import com.store.utils.Paths;
 /**
  * Servlet implementation class for initializing the cart
  * @author Yicong Li
- * @version 2017-10-26
  *
  */
 @WebServlet(description = "go to shopping cart", urlPatterns = {"/goToCart"})
@@ -47,7 +46,7 @@ public class GoToCartControllerServlet extends HttpServlet{
 		// initialize result
 		String result = "[";
 		
-		// refer to AccountControllerServlet
+		
 		// load ssl configuration
 		ServletContext servletContext = this.getServletContext();
 		SSLContext sslContext = Handshake.getSslContext(servletContext);
@@ -81,6 +80,7 @@ public class GoToCartControllerServlet extends HttpServlet{
 		// form result ends
 		result += "]";
 				
+		// set return data
 		response.setContentType("application/json");
 		response.setCharacterEncoding("UTF-8");
 		response.getWriter().write(result);

@@ -21,7 +21,6 @@ import com.store.utils.Paths;
 /**
  * Servlet implementation class for getting cd data of a category
  * @author Yicong Li
- * @version 2017-10-25
  *
  */
 @WebServlet(description = "get cd data of a category", urlPatterns = {"/getCDs"})
@@ -42,7 +41,7 @@ public class GetCDCategoryControllerServlet extends HttpServlet{
 	
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+		// get category from the request
 		String category = request.getParameter("category");
 		// refer to AccountControllerServlet
 		// load ssl configuration
@@ -52,15 +51,18 @@ public class GetCDCategoryControllerServlet extends HttpServlet{
 		// create the api client and invoke the request
 		Client client = ClientBuilder.newBuilder().sslContext(sslContext).build();
 		if (category.equals("ALL")) {
+			// if all products are requested
 			result = client.target(Paths.CD_CATEGORY)
 					.request(MediaType.APPLICATION_JSON)
 					.get(String.class);
 		} else {
+			// if only products of one category are requested
 			result = client.target(Paths.CD_CATEGORY + category)
 					.request(MediaType.APPLICATION_JSON)
 					.get(String.class);
 		}
-				
+			
+		// set return data
 		response.setContentType("application/json");
 		response.setCharacterEncoding("UTF-8");
 		response.getWriter().write(result);

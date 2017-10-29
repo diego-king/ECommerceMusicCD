@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Servlet implementation class for cd store
  * @author Yicong Li
- * @version 2017-10-22
  */
 @WebServlet(description = "CD Store", urlPatterns = { "/store" })
 public class StoreControllerServlet extends HttpServlet {
@@ -29,6 +28,7 @@ public class StoreControllerServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// forward request to jsp page
 	    RequestDispatcher dispatcher = this.getServletContext().getRequestDispatcher("/WEB-INF/jsp/store.jsp");  
 	    dispatcher.forward(request, response);
 	}

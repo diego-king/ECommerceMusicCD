@@ -7,12 +7,10 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 /**
  * Servlet implementation class for shopping cart
  * @author Yicong Li
- * @version 2017-10-22
  */
 @WebServlet(description = "Shopping Cart", urlPatterns = { "/cart" })
 public class ShoppingCartControllerServlet extends HttpServlet {
@@ -35,6 +33,7 @@ public class ShoppingCartControllerServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// forward request to jsp page
 		RequestDispatcher dispatcher = this.getServletContext().getRequestDispatcher("/WEB-INF/jsp/cart.jsp");  
 	    dispatcher.forward(request, response);
 	}
