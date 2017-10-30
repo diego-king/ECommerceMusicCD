@@ -121,9 +121,7 @@ public class AccountControllerServlet extends HttpServlet {
 		Response resp = webtarget.request(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).post(Entity.json(input));
 		
 		// Check the response
-		System.out.println(resp);
         int code = resp.getStatus();
-        System.out.println(code);
         
         // Login if the code is 200/201, otherwise send the error message to the client
         if (code == 200 || code == 201) { 

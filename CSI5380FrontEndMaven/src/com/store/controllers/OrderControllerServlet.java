@@ -44,7 +44,7 @@ public class OrderControllerServlet extends HttpServlet {
     }
 
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * Get the account info and shipping options, and forward the user to the order page
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
@@ -64,7 +64,6 @@ public class OrderControllerServlet extends HttpServlet {
         	response.sendRedirect(request.getContextPath() + "/store");
         	return;
 		}
-		
 		
 		// Create the API client and invoke the request to get the account information
 		ServletContext sc = this.getServletContext();
@@ -145,7 +144,7 @@ public class OrderControllerServlet extends HttpServlet {
 	}
 
 	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 * Pass the cart items, account id and shipping info to the order creation service
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
