@@ -1,12 +1,14 @@
 package com.store.controllers;
 
 import java.io.IOException;
+import java.io.StringReader;
 import java.math.BigDecimal;
 import java.util.List;
 
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObjectBuilder;
+import javax.json.JsonReader;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -201,7 +203,10 @@ public class OrderControllerServlet extends HttpServlet {
     		session.removeAttribute("cdList");
         	response.sendRedirect(request.getContextPath() + "/payment");
         } else if (code == 400) {
-        	String message = resp.readEntity(String.class);
+        	String responseStr = resp.readEntity(String.class);
+        	StringReader stringReader = new StringReader(responseStr);
+        	JsonReader reader = Json.createReader(stringReader);
+        	String message = reader.readObject().getString("message");
         	session.setAttribute("message", message);
         	response.sendRedirect(request.getContextPath() + "/order");
         } else if (code == 401) {

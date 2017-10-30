@@ -1,11 +1,13 @@
 package com.store.controllers;
 
 import java.io.IOException;
+import java.io.StringReader;
 import java.util.Base64;
 
 import javax.json.Json;
 import javax.json.JsonBuilderFactory;
 import javax.json.JsonObjectBuilder;
+import javax.json.JsonReader;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -137,7 +139,10 @@ public class AccountControllerServlet extends HttpServlet {
         		response.sendRedirect(request.getContextPath() + "/store");
         	}
         } else if (code == 400) {
-        	String message = resp.readEntity(String.class);
+        	String responseStr = resp.readEntity(String.class);
+        	StringReader stringReader = new StringReader(responseStr);
+        	JsonReader reader = Json.createReader(stringReader);
+        	String message = reader.readObject().getString("message");
         	session.setAttribute("message", message);
         	response.sendRedirect(request.getContextPath() + "/account");
         } else if (code == 401) {
