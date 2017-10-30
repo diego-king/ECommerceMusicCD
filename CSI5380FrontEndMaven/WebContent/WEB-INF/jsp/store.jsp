@@ -50,10 +50,10 @@
             </div>
             <br>
             <div class="row">
-                    <a href="./cart" class="btn btn-primary" role="button">
-                        Shopping Cart
-                        <i class="fa fa-shopping-cart" aria-hidden="true"></i>
-                    </a>
+                <a href="./cart" class="btn btn-primary" role="button">
+                    Shopping Cart
+                    <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+                </a>
             </div>
             <br>
             <br>

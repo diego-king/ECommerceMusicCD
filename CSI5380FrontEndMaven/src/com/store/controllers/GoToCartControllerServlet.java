@@ -21,69 +21,68 @@ import com.store.utils.Paths;
 
 /**
  * Servlet implementation class for initializing the cart
+ * 
  * @author Yicong Li
  *
  */
-@WebServlet(description = "go to shopping cart", urlPatterns = {"/goToCart"})
-public class GoToCartControllerServlet extends HttpServlet{
+@WebServlet(description = "go to shopping cart", urlPatterns = { "/goToCart" })
+public class GoToCartControllerServlet extends HttpServlet {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 8401566769847653494L;
-	
-	/**
-	 * default constructor
-	 */
-	public GoToCartControllerServlet() {
-		// TODO Auto-generated constructor stub
-		super();
-	}
-	
-	@Override
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// form result begins
-		// initialize result
-		String result = "[";
-		
-		
-		// load ssl configuration
-		ServletContext servletContext = this.getServletContext();
-		SSLContext sslContext = Handshake.getSslContext(servletContext);
-		
-		// create the api client and invoke the request
-		Client client = ClientBuilder.newBuilder().sslContext(sslContext).build();
-		
-		// get session data
-		HttpSession session = request.getSession(true);
-		String cdList = (String) session.getAttribute("cdList");
-		if (cdList != null) {
-			String[] cdIds = cdList.split(" ");
-			for (int i = 0; i < cdIds.length; i++) {
-				Integer cdCount = (Integer) session.getAttribute(cdIds[i] + ".counter");
-				if (cdCount != null) {	
-					String aResult = 
-							client.target(Paths.CD_INFO + cdIds[i] + "/" + cdCount.intValue())
-							.request(MediaType.APPLICATION_JSON)
-							.get(String.class);
-					
-					// add this cd result to final result
-					result += aResult;
-					// if this is not the last one
-					if (i < cdIds.length - 1) {
-						result += ",";
-					}
-				}
-			}
-		}
-		
-		// form result ends
-		result += "]";
-				
-		// set return data
-		response.setContentType("application/json");
-		response.setCharacterEncoding("UTF-8");
-		response.getWriter().write(result);
-	}
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 8401566769847653494L;
+
+    /**
+     * default constructor
+     */
+    public GoToCartControllerServlet() {
+        // TODO Auto-generated constructor stub
+        super();
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        // form result begins
+        // initialize result
+        String result = "[";
+
+        // load ssl configuration
+        ServletContext servletContext = this.getServletContext();
+        SSLContext sslContext = Handshake.getSslContext(servletContext);
+
+        // create the api client and invoke the request
+        Client client = ClientBuilder.newBuilder().sslContext(sslContext).build();
+
+        // get session data
+        HttpSession session = request.getSession(true);
+        String cdList = (String) session.getAttribute("cdList");
+        if (cdList != null) {
+            String[] cdIds = cdList.split(" ");
+            for (int i = 0; i < cdIds.length; i++) {
+                Integer cdCount = (Integer) session.getAttribute(cdIds[i] + ".counter");
+                if (cdCount != null) {
+                    String aResult = client.target(Paths.CD_INFO + cdIds[i] + "/" + cdCount.intValue())
+                            .request(MediaType.APPLICATION_JSON).get(String.class);
+
+                    // add this cd result to final result
+                    result += aResult;
+                    // if this is not the last one
+                    if (i < cdIds.length - 1) {
+                        result += ",";
+                    }
+                }
+            }
+        }
+
+        // form result ends
+        result += "]";
+
+        // set return data
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        response.getWriter().write(result);
+    }
 
 }
