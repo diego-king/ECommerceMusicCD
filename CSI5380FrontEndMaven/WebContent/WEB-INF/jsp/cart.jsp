@@ -9,8 +9,8 @@
         <meta name="author" content="Yicong Li">
         <link rel="stylesheet" href="css/bootstrap.min.css">
 
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
         <script src="js/lib/jquery-3.2.1.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
         <script src="js/lib/bootstrap.min.js"></script>
         <script src="js/lib/jquery.loadTemplate.js"></script>
 
@@ -33,6 +33,7 @@
                         <div class="col-sm-12" id="cartArea">
                         </div>
                     </div>
+                    <br>
                     <div class="row">
                         <form class="col-sm-5">
                             <a href="./order" class="btn btn-success" id="checkout">Checkout</a>

@@ -64,6 +64,7 @@ public class AddToCartControllerServlet extends HttpServlet{
 		session.setAttribute(id + ".counter", cdCount);
 		session.setAttribute("cdList", cdList);
 		
+		// set return data
 		response.setContentType("text/plain");
 		response.setCharacterEncoding("UTF-8");
 		response.getWriter().write("Success!");

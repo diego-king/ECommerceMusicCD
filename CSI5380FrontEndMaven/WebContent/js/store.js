@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2017- Group 5 - All Rights Reserved
+ * Copyright (C) 2017- I MUSIC - All Rights Reserved
  *  
  * 
  * Version 1.0: 
@@ -45,9 +45,12 @@ $(document).ready(function() {
                 id: id
             };
             // jquery post begins
-            $.post('/CSI5380FrontEnd/addToCart', postData, function() {
+            $.post('/CSI5380FrontEnd/addToCart', postData, function(data) {
                 // a cd is added successfully
-                alert('Your item has been successfully added to the shopping cart.');
+                if (data == 'Success!') {
+                    console.log(data);
+                    alert('Your item has been successfully added to the shopping cart.');
+                }
             });
             // jquery post ends
         });

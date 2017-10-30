@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2017- Group 5 - All Rights Reserved
+ * Copyright (C) 2017- I MUSIC - All Rights Reserved
  *  
  * 
  * Version 1.0: 
