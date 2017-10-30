@@ -15,6 +15,11 @@ import javax.servlet.http.HttpSession;
 
 /**
  * Servlet Filter implementation class AuthenticationFilter
+ * Prevents un-authenticated visitors from accessing "/order" and "/payment" paths
+ * 
+ * @author Mike Kreager
+ * @version 2017-10-28
+ * 
  */
 @WebFilter(servletNames = { "com.store.controllers.OrderControllerServlet", 
 		"com.store.controllers.PaymentControllerServlet" })

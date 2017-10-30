@@ -72,7 +72,6 @@ public class LoginControllerServlet extends HttpServlet {
 		
 		// Check the response
         int code = resp.getStatus();
-        System.out.println(code);
         
         // Login if the code is 200, otherwise send the error message to the client
         if (code == 200) {

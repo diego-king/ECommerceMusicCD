@@ -5,9 +5,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import javax.json.Json;
-import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
-import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
@@ -26,8 +24,6 @@ import javax.ws.rs.core.Response;
 import com.store.utils.Handshake;
 import com.store.utils.Paths;
 import com.store.model.*;
-
-import com.store.utils.Paths;
 
 /**
  * Controller servlet to handle processing of orders
@@ -73,7 +69,7 @@ public class OrderControllerServlet extends HttpServlet {
 		// Create the API client and invoke the request to get the account information
 		ServletContext sc = this.getServletContext();
 		Client client = ClientBuilder.newBuilder().sslContext(Handshake.getSslContext(sc)).build();
-		Response accountResponse = client.target("https://localhost:8444/api/account")
+		Response accountResponse = client.target(Paths.GET_ACCOUNT)
         	.queryParam("username", username)
         	.queryParam("password", encodedPassword)
         	.request(MediaType.TEXT_PLAIN_TYPE)
@@ -87,7 +83,7 @@ public class OrderControllerServlet extends HttpServlet {
         
 		// Invoke the request for the shipping options
 		Response shippingResponse =
-            client.target("https://localhost:8444/api/order/shipping")
+            client.target(Paths.GET_SHIPPING)
             .request()
             .accept(MediaType.APPLICATION_JSON)
             .get();
@@ -98,7 +94,6 @@ public class OrderControllerServlet extends HttpServlet {
 		shippingResponse.close();
 		
         // Get customer info
-	
         Customer customer = account.getCustomer();
         request.setAttribute("email", customer.getEmail());
         request.setAttribute("firstName", customer.getFirstName());
@@ -191,13 +186,20 @@ public class OrderControllerServlet extends HttpServlet {
 		
 		// Check the response
         int code = resp.getStatus();
-        System.out.println(code);
         
         // If the response is 200/201, otherwise send the error message to the client
         if (code == 200 || code == 201) { 
         	session.setAttribute("message", "Order created successfully.");
         	String poId = resp.readEntity(String.class);
         	session.setAttribute("poId", poId);
+        	// Remove the cart and its items from session after order success
+        	session.removeAttribute("session.order");
+        	String cdList = (String) session.getAttribute("cdList");
+    		String[] cdListArray = cdList.split(" ");
+    		for (String cdId : cdListArray) {
+    			session.removeAttribute(cdId + ".counter");
+    		}
+    		session.removeAttribute("cdList");
         	response.sendRedirect(request.getContextPath() + "/payment");
         } else if (code == 400) {
         	String message = resp.readEntity(String.class);

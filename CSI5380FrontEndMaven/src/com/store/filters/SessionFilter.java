@@ -14,6 +14,11 @@ import javax.servlet.http.HttpSession;
 
 /**
  * Servlet Filter implementation class SessionFilter
+ * Prevents authenticated users from accessing "/account" and "/login" paths
+ * 
+ * @author Mike Kreager
+ * @version 2017-10-28
+ * 
  */
 @WebFilter(servletNames = { "com.store.controllers.AccountControllerServlet", 
 		"com.store.controllers.LoginControllerServlet" })

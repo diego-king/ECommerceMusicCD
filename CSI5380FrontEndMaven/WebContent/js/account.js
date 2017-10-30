@@ -1,3 +1,19 @@
+/* 
+ * Copyright (C) 2017- Group 5 - All Rights Reserved
+ *  
+ * 
+ * Version 1.0: 
+ * Design: Mike Kreager
+ * Author: Mike Kreager
+ * 
+ */
+
+
+/*
+ * This file contains a function for populating values to the shipping
+ * address section of the account page.
+ */
+
 // Copy billing information to shipping information
 $(document).ready(function() {
 	$("#sameAsBilling").on("change", function(){

@@ -174,23 +174,14 @@ public class PaymentControllerServlet extends HttpServlet {
 		
 		// Check the response
         int code = resp.getStatus();
-        System.out.println(code);
 
 		// Confirm or deny order, otherwise send the error message to the client
 	        if (code == 200 || code == 201) {
 	        	String success = resp.readEntity(String.class);
-	        	System.out.println(success);
 	        	if (success.equals("true")) {
 	        		session.setAttribute("message", "Order successfully completed.");
-	        		// Need to invalidate the cart session attributes at this point
+	        		// Remove the PO id session attribute after order confirmation
 	        		session.removeAttribute("poId");
-	        		
-	        		String cdList = (String) session.getAttribute("cdList");
-	        		String[] cdListArray = cdList.split(" ");
-	        		for (String cdId : cdListArray) {
-	        			session.removeAttribute(cdId + ".counter");
-	        		}
-	        		session.removeAttribute("cdList");
 	        		response.sendRedirect(request.getContextPath() + "/store");
 	        	} else {
 	        		session.setAttribute("message", "Credit card authorization failed.");
