@@ -36,6 +36,7 @@ application-dev.properties file.
 - Location: src/test/java in the "ca.edu.uottawa.csi5380.api" package.
 - AccountRestControllerTest contains JUnit tests for the AccountRestController.
 - OrderRestControllerTest contains JUnit tests for the OrderRestController.
+- Expected results: src/test/resources/results
 - To run tests, create a new Maven run config and enter in goals 
 ```
 mvn clean test 
