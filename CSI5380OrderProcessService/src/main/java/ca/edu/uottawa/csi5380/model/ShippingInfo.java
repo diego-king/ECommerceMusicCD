@@ -80,4 +80,26 @@ public class ShippingInfo {
                 '}';
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ShippingInfo)) return false;
+
+        ShippingInfo that = (ShippingInfo) o;
+
+        if (getId() != that.getId()) return false;
+        if (!getCompany().equals(that.getCompany())) return false;
+        if (!getType().equals(that.getType())) return false;
+        return getPrice().equals(that.getPrice());
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (int) (getId() ^ (getId() >>> 32));
+        result = 31 * result + getCompany().hashCode();
+        result = 31 * result + getType().hashCode();
+        result = 31 * result + getPrice().hashCode();
+        return result;
+    }
+
 }

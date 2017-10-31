@@ -1,6 +1,7 @@
 package ca.edu.uottawa.csi5380.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.apache.commons.lang3.StringUtils;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
@@ -75,7 +76,7 @@ public class PurchaseOrder {
                          BigDecimal shippingTotal) {
         this.id = id;
         this.date = date;
-        this.status = PoStatus.valueOf(status);
+        this.status = StringUtils.isNumeric(status) ? PoStatus.values()[Integer.parseInt(status)] : PoStatus.valueOf(status);
         this.subTotal = subTotal;
         this.grandTotal = grandTotal;
         this.taxTotal = taxTotal;

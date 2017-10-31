@@ -31,3 +31,8 @@ spring.datasource.password=YOUR_DB_PASSWORD
 1. Running on: https://localhost:8444/swagger-ui.html
 2. Note: Port 8444 will depend on the server.port property you have set in the
 application-dev.properties file.
+
+### 4. Spring REST API Test Classes
+- Location: src/test/java in the "ca.edu.uottawa.csi5380.api" package.
+- AccountRestControllerTest contains JUnit tests for the AccountRestController.
+- OrderRestControllerTest contains JUnit tests for the OrderRestController.

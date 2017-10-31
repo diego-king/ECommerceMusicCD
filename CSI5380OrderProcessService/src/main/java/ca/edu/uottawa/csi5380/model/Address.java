@@ -1,6 +1,7 @@
 package ca.edu.uottawa.csi5380.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Represents an Address of type shipping or billing and
@@ -74,7 +75,7 @@ public class Address {
         this.country = country;
         this.zip = zip;
         this.phone = phone;
-        this.type = AddressType.valueOf(type);
+        this.type = StringUtils.isNumeric(type) ? AddressType.values()[Integer.parseInt(type)] : AddressType.valueOf(type);
     }
 
     public Address(long id, String fullName, String addressLine1, String addressLine2, String city, String province,
@@ -197,4 +198,37 @@ public class Address {
                 '}';
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Address)) return false;
+
+        Address address = (Address) o;
+
+        if (getId() != address.getId()) return false;
+        if (!getFullName().equals(address.getFullName())) return false;
+        if (!getAddressLine1().equals(address.getAddressLine1())) return false;
+        if (!getAddressLine2().equals(address.getAddressLine2())) return false;
+        if (!getCity().equals(address.getCity())) return false;
+        if (!getProvince().equals(address.getProvince())) return false;
+        if (!getCountry().equals(address.getCountry())) return false;
+        if (!getZip().equals(address.getZip())) return false;
+        if (!getPhone().equals(address.getPhone())) return false;
+        return getType() == address.getType();
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (int) (getId() ^ (getId() >>> 32));
+        result = 31 * result + getFullName().hashCode();
+        result = 31 * result + getAddressLine1().hashCode();
+        result = 31 * result + getAddressLine2().hashCode();
+        result = 31 * result + getCity().hashCode();
+        result = 31 * result + getProvince().hashCode();
+        result = 31 * result + getCountry().hashCode();
+        result = 31 * result + getZip().hashCode();
+        result = 31 * result + getPhone().hashCode();
+        result = 31 * result + getType().hashCode();
+        return result;
+    }
 }

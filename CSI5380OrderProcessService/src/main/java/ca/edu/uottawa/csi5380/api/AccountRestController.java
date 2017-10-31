@@ -10,14 +10,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import static ca.edu.uottawa.csi5380.constant.RestPaths.ACCOUNT_BASE_REST_URL;
+import static ca.edu.uottawa.csi5380.constant.RestPaths.ACCOUNT_CREATE_REST_URL;
+import static ca.edu.uottawa.csi5380.constant.RestPaths.ACCOUNT_LOGIN_REST_URL;
+
 /**
  * Provides REST services for account related queries.
  *
  * @author Kenny Byrd
  */
 @RestController
-@RequestMapping("/api/account")
-@Api(value = "/api/account")
+@RequestMapping(ACCOUNT_BASE_REST_URL)
+@Api(value = ACCOUNT_BASE_REST_URL)
 public class AccountRestController {
 
     private static final Logger LOGGER = LogManager.getLogger(OrderRestController.class);
@@ -38,7 +42,7 @@ public class AccountRestController {
             @ApiResponse(code = 404, message = "User account not found."),
             @ApiResponse(code = 500, message = "Database or server error occurred.")
     })
-    @RequestMapping(value = "/login", method = RequestMethod.GET)
+    @RequestMapping(value = ACCOUNT_LOGIN_REST_URL, method = RequestMethod.GET)
     @ResponseStatus(value = HttpStatus.OK)
     public void accountLogin(@ApiParam(value = "Customer's email address", required = true) @RequestParam("username") String username,
                              @ApiParam(value = "Customer's password", required = true) @RequestParam("password") String password) {
@@ -50,7 +54,7 @@ public class AccountRestController {
             notes = "Creates a new account using the Customer information (email, first, last name, password), " +
                     "and stores default billing/shipping address. Fails if the email (account name) already exists. " +
                     "IMPORTANT: Addresses do not need IDs and Customer does not need default shipping IDs.")
-    @RequestMapping(value = "/create", method = RequestMethod.POST)
+    @RequestMapping(value = ACCOUNT_CREATE_REST_URL, method = RequestMethod.POST)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Account created successfully."),
             @ApiResponse(code = 400, message = "Account already exists with username."),
@@ -77,6 +81,5 @@ public class AccountRestController {
         LOGGER.info(String.format("getAccount() called with username %s and password %s", username, password));
         return accountService.getAccount(username, password);
     }
-
 
 }

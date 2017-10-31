@@ -4,6 +4,7 @@ import ca.edu.uottawa.csi5380.database.agent.DataAgent;
 import ca.edu.uottawa.csi5380.database.agent.utils.DataUtils;
 import ca.edu.uottawa.csi5380.exception.RestDaoException;
 import ca.edu.uottawa.csi5380.model.*;
+import ca.edu.uottawa.csi5380.model.builders.PurchaseOrderBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -49,7 +50,7 @@ public class OrderDaoImpl implements OrderDao {
         // Error checking
         validatePurchaseEntry(p);
 
-        PurchaseOrder po = new PurchaseOrder();
+        PurchaseOrder po = new PurchaseOrderBuilder().createPurchaseOrder();
 
         // Get the necessary shipping info from the DB
         ShippingInfo shippingInfo = getShippingInfoById(p.getShippingInfoId());

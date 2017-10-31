@@ -38,6 +38,18 @@ public class Cd {
         this.imgUrl = "";
     }
 
+    public Cd(String title, String artist, String year, String description, BigDecimal price, String label, CdCategory category, String imgUrl) {
+        this.id = "";
+        this.title = title;
+        this.artist = artist;
+        this.year = year;
+        this.description = description;
+        this.price = price;
+        this.label = label;
+        this.category = category;
+        this.imgUrl = imgUrl;
+    }
+
     public Cd(String id, String title, String artist, String year, String description,
               BigDecimal price, String label, String category, String imgUrl) {
         this.id = id;

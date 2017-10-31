@@ -1,5 +1,8 @@
 package ca.edu.uottawa.csi5380.model;
 
+import ca.edu.uottawa.csi5380.model.builders.AddressInfoBuilder;
+import ca.edu.uottawa.csi5380.model.builders.CustomerBuilder;
+
 /**
  * Holds Customer information, as well as additional shipping
  * information including their default Billing and Shipping address.
@@ -12,13 +15,13 @@ public class Account {
     private AddressInfo defaultAddressInfo;
 
     public Account() {
-        this.customer = new Customer();
-        this.defaultAddressInfo = new AddressInfo();
+        this.customer = new CustomerBuilder().createCustomer();
+        this.defaultAddressInfo = new AddressInfoBuilder().createAddressInfo();
     }
 
     public Account(Customer customer) {
         this.customer = customer;
-        this.defaultAddressInfo = new AddressInfo();
+        this.defaultAddressInfo = new AddressInfoBuilder().createAddressInfo();
     }
 
     public Account(Customer customer, AddressInfo defaultAddressInfo) {
@@ -50,4 +53,21 @@ public class Account {
                 '}';
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Account)) return false;
+
+        Account account = (Account) o;
+
+        if (!getCustomer().equals(account.getCustomer())) return false;
+        return getDefaultAddressInfo().equals(account.getDefaultAddressInfo());
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getCustomer().hashCode();
+        result = 31 * result + getDefaultAddressInfo().hashCode();
+        return result;
+    }
 }

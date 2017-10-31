@@ -13,14 +13,16 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static ca.edu.uottawa.csi5380.constant.RestPaths.*;
+
 /**
  * Provides REST services for order related queries.
  *
  * @author Kenny Byrd
  */
 @RestController
-@RequestMapping("/api/order")
-@Api(value = "/api/order")
+@RequestMapping(ORDER_BASE_REST_URL)
+@Api(value = ORDER_BASE_REST_URL)
 public class OrderRestController {
 
     private static final Logger LOGGER = LogManager.getLogger(OrderRestController.class);
@@ -41,7 +43,7 @@ public class OrderRestController {
             @ApiResponse(code = 200, message = "Shipping info successfully retrieved."),
             @ApiResponse(code = 500, message = "Database or server error occurred.")
     })
-    @RequestMapping(value = "/shipping", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = ORDER_GET_SHIPPING_INFO_REST_URL, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public List<ShippingInfo> getShippingInfo() {
         LOGGER.info("getShippingInfo() called.");
         return orderService.getShippingInfo();
@@ -57,7 +59,7 @@ public class OrderRestController {
             @ApiResponse(code = 400, message = "Customer email(username) or shipping ID not provided."),
             @ApiResponse(code = 500, message = "Database or server error occurred.")
     })
-    @RequestMapping(value = "/create", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = ORDER_CREATE_REST_URL, method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public long createOrder(@ApiParam(value = "Basic Order information", required = true) @RequestBody PurchaseEntry p) {
         LOGGER.info(String.format("createOrder() called with params %s", p.toString()));
         return orderService.createOrder(p);
@@ -72,7 +74,7 @@ public class OrderRestController {
             @ApiResponse(code = 200, message = "Order successfully confirmed and updated."),
             @ApiResponse(code = 500, message = "Database or server error occurred.")
     })
-    @RequestMapping(value = "/confirm/{id}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = ORDER_CONFIRM_REST_URL, method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public boolean confirmOrder(@ApiParam(value = "ID of the order to confirm", required = true) @PathVariable long id,
                                 @ApiParam(value = "Credit card number", required = true) @RequestParam String card,
                                 @ApiParam(value = "Shipping and Billing address information user verified.", required = true) @RequestBody AddressInfo addressInfo) {

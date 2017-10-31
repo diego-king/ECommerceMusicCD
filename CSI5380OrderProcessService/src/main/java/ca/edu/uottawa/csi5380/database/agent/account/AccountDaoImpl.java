@@ -6,8 +6,9 @@ import ca.edu.uottawa.csi5380.exception.RestDaoException;
 import ca.edu.uottawa.csi5380.exception.UserNotFoundException;
 import ca.edu.uottawa.csi5380.model.Account;
 import ca.edu.uottawa.csi5380.model.Address;
-import ca.edu.uottawa.csi5380.model.AddressInfo;
 import ca.edu.uottawa.csi5380.model.Customer;
+import ca.edu.uottawa.csi5380.model.builders.AccountBuilder;
+import ca.edu.uottawa.csi5380.model.builders.AddressInfoBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -76,9 +77,14 @@ public class AccountDaoImpl implements AccountDao {
     public Account getAccount(String username, String password) {
         Customer c = confirmCustomerWithCredentials(username, password);
         // Use default Customer shipping and billing address IDs to get address info
-        return new Account(c, new AddressInfo(
-                getAddressById(c.getDefaultBillingAddressId()),
-                getAddressById(c.getDefaultShippingAddressId())));
+        return new AccountBuilder()
+                .setCustomer(c)
+                .setDefaultAddressInfo(
+                        new AddressInfoBuilder()
+                                .setBillingAddress(getAddressById(c.getDefaultBillingAddressId()))
+                                .setShippingAddress(getAddressById(c.getDefaultShippingAddressId()))
+                                .createAddressInfo())
+                .createAccount();
     }
 
     /**
