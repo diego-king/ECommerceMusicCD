@@ -49,18 +49,18 @@ public class OrderRestController {
         return orderService.getShippingInfo();
     }
 
-    @ApiOperation(value = "Creates a new purchase order, and returns the order ID.",
+    @ApiOperation(value = "Creates a new purchase order, and returns the Purchase Order.",
             notes = "The PurchaseEntry object MUST contain a Customer's username (email), shipping info ID (ID of shipping method - " +
                     "E.g. Canada Post Priority Shipping ID is 1 in DB) and a list of PO items they're ordering. " +
                     "Note: PO Items DO NOT need a poId.",
-            response = long.class)
+            response = PurchaseOrder.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Order created successfully."),
             @ApiResponse(code = 400, message = "Customer email(username) or shipping ID not provided."),
             @ApiResponse(code = 500, message = "Database or server error occurred.")
     })
     @RequestMapping(value = ORDER_CREATE_REST_URL, method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public long createOrder(@ApiParam(value = "Basic Order information", required = true) @RequestBody PurchaseEntry p) {
+    public PurchaseOrder createOrder(@ApiParam(value = "Basic Order information", required = true) @RequestBody PurchaseEntry p) {
         LOGGER.info(String.format("createOrder() called with params %s", p.toString()));
         return orderService.createOrder(p);
     }

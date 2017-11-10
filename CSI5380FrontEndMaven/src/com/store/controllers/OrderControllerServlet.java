@@ -56,7 +56,7 @@ public class OrderControllerServlet extends HttpServlet {
 		String encodedPassword = (String) session.getAttribute("password");
 		String[] cdListArray = new String[] {};
 		String cdList = (String) session.getAttribute("cdList");
-		if (cdList != null) {
+		if (cdList != null && !"".equals(cdList.trim())) {
 			cdList = cdList.trim();
 			cdListArray = cdList.split(" ");
 		}
@@ -191,8 +191,9 @@ public class OrderControllerServlet extends HttpServlet {
         // If the response is 200/201, otherwise send the error message to the client
         if (code == 200 || code == 201) { 
         	session.setAttribute("message", "Order created successfully.");
-        	String poId = resp.readEntity(String.class);
-        	session.setAttribute("poId", poId);
+        	PurchaseOrder po = (PurchaseOrder) resp.readEntity(PurchaseOrder.class);
+        	session.setAttribute("poId", po.getId());
+        	session.setAttribute("po", po);
         	// Remove the cart and its items from session after order success
         	session.removeAttribute("session.order");
         	String cdList = (String) session.getAttribute("cdList");

@@ -22,7 +22,6 @@ public class StoreControllerServlet extends HttpServlet {
      */
     public StoreControllerServlet() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
     /**

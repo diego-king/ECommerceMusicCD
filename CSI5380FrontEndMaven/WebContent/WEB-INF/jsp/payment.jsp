@@ -20,7 +20,7 @@
    		<h2 class="pb-2">Verification and payment: PO #${poId}</h2>
    		<form method="POST" action="payment" data-parsley-validate>
 	   		<div class="row">
-				  <div class="col-sm-6">
+				  <div class="col-sm-12">
 				    <div class="card">
 				    	<h4 class="card-header">Customer</h4>
 				      <div class="card-body">
@@ -30,18 +30,17 @@
 				      </div>
 				    </div>
 				  </div>
-				  <div class="col-sm-6">
+				  <!--  <div class="col-sm-6">
 				    <div class="card">
 				    	<h4 class="card-header">Credit card</h4>
 				      <div class="card-body">
 				        <div class="card-text">
-				        	<!-- Sample credit card number provided for ease of testing -->
 				        	<input class="form-control" id="creditCard" name="creditCard" required="required" value="4557982426543136"
 				        			data-parsley-trigger="change" data-parsley-creditcard="" type="tel">
 				        	</div>
 				      </div>
 				    </div>
-				  </div>
+				  </div> -->
 				</div>
 				<br>
 				<div class="row">

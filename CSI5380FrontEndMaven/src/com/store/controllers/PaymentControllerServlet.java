@@ -1,6 +1,11 @@
 package com.store.controllers;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import javax.json.Json;
 import javax.json.JsonObjectBuilder;
 import javax.servlet.RequestDispatcher;
@@ -20,8 +25,17 @@ import javax.ws.rs.core.Response;
 import com.store.model.Account;
 import com.store.model.Address;
 import com.store.model.Customer;
-import com.store.utils.Handshake;
-import com.store.utils.Paths;
+import com.store.model.PurchaseOrder;
+import com.store.utils.*;
+import com.paypal.api.payments.Amount;
+import com.paypal.api.payments.Details;
+import com.paypal.api.payments.Links;
+import com.paypal.api.payments.Payer;
+import com.paypal.api.payments.Payment;
+import com.paypal.api.payments.PaymentExecution;
+import com.paypal.api.payments.RedirectUrls;
+import com.paypal.api.payments.Transaction;
+import com.paypal.base.rest.PayPalRESTException;
 /**
  * Controller servlet to handle payment for orders
  * 
@@ -124,11 +138,7 @@ public class PaymentControllerServlet extends HttpServlet {
 	 * Pass the account id, credit card number and address info to the order confirmation service
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-		// Get the session and PO id attribute
 		HttpSession session = request.getSession();
-		String poId = (String) session.getAttribute("poId");
-		
 		// Create JSON object for post
 		JsonObjectBuilder builder = Json.createObjectBuilder();
 		
@@ -162,51 +172,66 @@ public class PaymentControllerServlet extends HttpServlet {
 		
 		// Build JSON object for the post
 		String input = builder.build().toString();
-
-		// Create the API client and invoke the request
-		ServletContext sc = this.getServletContext();
-		Client client = ClientBuilder.newBuilder().sslContext(Handshake.getSslContext(sc)).build();
-		Response resp = client.target(Paths.CONFIRM_ORDER + poId)
-				.queryParam("card", request.getParameter("creditCard"))
-	        	.request(MediaType.APPLICATION_JSON)
-	        	.accept(MediaType.APPLICATION_JSON)
-	        	.post(Entity.json(input));
+		session.setAttribute("purchaseOrderDetail", input);
 		
-		// Check the response
-        int code = resp.getStatus();
+		// Set payer details
+		Payer payer = new Payer();
+		payer.setPaymentMethod("paypal");
 
-		// Confirm or deny order, otherwise send the error message to the client
-	        if (code == 200 || code == 201) {
-	        	String success = resp.readEntity(String.class);
-	        	if (success.equals("true")) {
-	        		session.setAttribute("message", "Order successfully completed.");
-	        		// Remove the PO id session attribute after order confirmation
-	        		session.removeAttribute("poId");
-	        		response.sendRedirect(request.getContextPath() + "/store");
-	        	} else {
-	        		session.setAttribute("message", "Credit card authorization failed.");
-	        		response.sendRedirect(request.getContextPath() + "/payment");
-	        	}
-	        } else if (code == 400) {
-	        	session.setAttribute("message", "Bad request.");
-	        	response.sendRedirect(request.getContextPath() + "/payment");
-	        } else if (code == 401) {
-	        	session.setAttribute("message", "Unauthorized.");
-	        	response.sendRedirect(request.getContextPath() + "/payment");
-	        } else if (code == 403) {
-	        	session.setAttribute("message", "Forbidden.");
-	        	response.sendRedirect(request.getContextPath() + "/payment");
-	        } else if (code == 404) {
-	        	session.setAttribute("message", "Not found.");
-	        	response.sendRedirect(request.getContextPath() + "/payment");
-	        } else if (code == 500) {
-	        	session.setAttribute("message", "Database or server error occurred.");
-	        	response.sendRedirect(request.getContextPath() + "/payment");
-	        } else {
-	        	session.setAttribute("message", "Something went wrong.");
-	        	response.sendRedirect(request.getContextPath() + "/payment");
-		}
-        resp.close();
+		// Set redirect URLs
+		RedirectUrls redirectUrls = new RedirectUrls();
+		redirectUrls.setCancelUrl("https://localhost:8443/CSI5380FrontEnd/payment");
+		redirectUrls.setReturnUrl("https://localhost:8443/CSI5380FrontEnd/paypalResp");
+
+		PurchaseOrder po = (PurchaseOrder) session.getAttribute("po");
+		BigDecimal shipTotal = po.getShippingTotal().setScale(2, BigDecimal.ROUND_CEILING);
+
+		BigDecimal taxTotal = po.getTaxTotal().setScale(2, BigDecimal.ROUND_CEILING);
+		BigDecimal subTotal = po.getSubTotal().setScale(2, BigDecimal.ROUND_CEILING);
+		
+		// Set payment details
+		Details details = new Details();
+		details.setShipping(shipTotal.toPlainString());
+		details.setSubtotal(subTotal.toPlainString());
+		details.setTax(taxTotal.toPlainString());
+
+		// Payment amount
+		Amount amount = new Amount();
+		amount.setCurrency("CAD");
+		// Total must be equal to sum of shipping, tax and subtotal.
+		BigDecimal grandTotal = shipTotal.add(subTotal).add(taxTotal);
+		amount.setTotal(grandTotal.toPlainString());
+		amount.setDetails(details);
+
+		// Transaction information
+		Transaction transaction = new Transaction();
+		transaction.setAmount(amount);
+		transaction
+		  .setDescription("This is the payment transaction description.");
+
+		// Add transaction to a list
+		List<Transaction> transactions = new ArrayList<Transaction>();
+		transactions.add(transaction);
+
+		// Add payment details
+		Payment payment = new Payment();
+		payment.setIntent("sale");
+		payment.setPayer(payer);
+		payment.setRedirectUrls(redirectUrls);
+		payment.setTransactions(transactions);
+		try {
+			  Payment createdPayment = payment.create(PayPalHelper.getAPIContext());
+
+			  Iterator<Links> links = createdPayment.getLinks().iterator();
+			  while (links.hasNext()) {
+			    Links link = links.next();
+			    if (link.getRel().equalsIgnoreCase("approval_url")) {
+			    	response.sendRedirect(link.getHref());
+			    }
+			  }
+			} catch (PayPalRESTException e) {
+			    System.err.println(e.getDetails());
+			}
 	}
 
 }

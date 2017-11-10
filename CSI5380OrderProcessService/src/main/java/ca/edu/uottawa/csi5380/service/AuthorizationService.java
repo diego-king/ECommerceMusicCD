@@ -32,15 +32,15 @@ public class AuthorizationService {
         // Reject every 5th request
         LOGGER.info("Authorizing Order Request #" + (counter.get()+1));
 
-        if (isOrderAutoRejected()) {
-            LOGGER.info("Order Request was automatically rejected (every 5th request must be rejected).");
-            return false;
-        }
+//        if (isOrderAutoRejected()) {
+//            LOGGER.info("Order Request was automatically rejected (every 5th request must be rejected).");
+//            return false;
+//        }
 
-        if (!isValidCreditCard(creditCardNum)) {
-            LOGGER.info("Order Request was rejected. Invalid credit card number format.");
-            return false;
-        }
+//        if (!isValidCreditCard(creditCardNum)) {
+//            LOGGER.info("Order Request was rejected. Invalid credit card number format.");
+//            return false;
+//        }
 
         LOGGER.info("Order Request was successfully authorized!");
 

@@ -7,7 +7,7 @@ import java.util.List;
 public interface OrderDao {
 
     List<ShippingInfo> getShippingInfo();
-    long createOrder(PurchaseEntry p);
+    PurchaseOrder createOrder(PurchaseEntry p);
     boolean confirmOrder(long orderId, boolean isAuthorized, AddressInfo addressInfo);
 
 }
