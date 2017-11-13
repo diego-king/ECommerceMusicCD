@@ -114,9 +114,6 @@ public class PayPalRespControllerServlet extends HttpServlet {
         resp.close();
     }
 
-	/** If Paypal payment is success,
-	 * Pass the account id, credit card number and address info to the order confirmation service
-	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	}
 }

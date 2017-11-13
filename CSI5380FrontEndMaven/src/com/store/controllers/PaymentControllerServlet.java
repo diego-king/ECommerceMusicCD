@@ -206,9 +206,8 @@ public class PaymentControllerServlet extends HttpServlet {
 		// Transaction information
 		Transaction transaction = new Transaction();
 		transaction.setAmount(amount);
-		transaction
-		  .setDescription("This is the payment transaction description.");
-
+		transaction.setDescription("This is for order "+ po.getId() + " in I Music. (tax included)");
+		
 		// Add transaction to a list
 		List<Transaction> transactions = new ArrayList<Transaction>();
 		transactions.add(transaction);
