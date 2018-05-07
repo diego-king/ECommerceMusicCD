@@ -21,7 +21,7 @@ import javax.servlet.http.HttpSession;
  * @version 2017-10-28
  * 
  */
-@WebFilter(servletNames = { "com.store.controllers.OrderControllerServlet", 
+@WebFilter(urlPatterns = {"/order", "/payment"}, servletNames = { "com.store.controllers.OrderControllerServlet", 
 		"com.store.controllers.PaymentControllerServlet" })
 public class AuthenticationFilter implements Filter {
 
